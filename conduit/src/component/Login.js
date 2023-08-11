@@ -14,7 +14,7 @@ const LoginPage = () => {
     return (
         <div className="auth-page">
             <div className="container page">
-                <div className="row">
+                <div className="row mt-5">
                     <div className="col-md-6 offset-md-3 col-xs-12">
                         <h1 className="text-xs-center">Sign in</h1>
                         <p className="text-xs-center">
@@ -23,15 +23,15 @@ const LoginPage = () => {
                         </p>
 
 
-                        <form onSubmit={submit} className='container'>
-                            <div className='row position-relative'>
+                        <form onSubmit={submit} className='container mt-9'>
+                            <div className=''>
                                 <div className='form-group'>
-                                    <input name='email' type='text' placeholder='Email' className='col-7 form-control form-control-lg ng-pristine ng-valid ng-empty ng-touched' />
-                                    <input name='password' type='password' placeholder='Password' className='col-7 form-control form-control-lg ng-pristine ng-valid ng-empty ng-touched' />
+                                    <input name='email' type='text' placeholder='Email' className='form-control form-control-lg mb-6' />
+                                    <input name='password' type='password' placeholder='Password' className='form-control form-control-lg mb-6' />
                                 </div>
                                 <button
                                     type='submit'
-                                    className='btn btn-success col-3 position-relative btn-lg start-0'
+                                    className='btn btn-success float-end btn-lg'
                                 >
                                     Sign in
                                 </button>
