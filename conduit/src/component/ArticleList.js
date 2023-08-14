@@ -17,26 +17,30 @@ const ArticleList = () => {
 
   return articleList.map((article, index) => {
     return (
-      <div key={article.slug} class="article-preview">
-        <div class="article-meta">
-          <a href="profile.html">
-            <img src={article.author.image} />
+      <div key={article.slug} class="article-preview p-5">
+      <div className="article-meta active d-flex justify-content-between align-items-center">
+
+          <a href="profile.html ">
+            <img src={article.author.image} className="rounded-circle"/>
           </a>
-          <div class="info">
-            <a href="" class="author">
+          <div class="info active">
+            <a href="" class="author ">
               {article.author.username}
             </a>
             <span class="date"></span>
           </div>
-          <button class="btn btn-outline-primary btn-sm pull-xs-right">
+          <button class="btn btn-outline-primary btn-sm pull-xs-right active">
             <i class="ion-heart"></i> 29
           </button>
         </div>
-        <a href="" class="preview-link">
+        <div className='active p-5'>
+        <a href="" class=" preview-link active  justify-content-between align-items-center ">
           <h1>{article.title}</h1>
           <p>{article.description}</p>
           <span>Read more...</span>
         </a>
+        </div>
+      
       </div>
     );
   });
