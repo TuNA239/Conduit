@@ -38,10 +38,13 @@ const LoginPage = () => {
             <div className="container page">
                 <div className="row mt-5">
                     <div className="col-md-6 offset-md-3 col-xs-12">
-                        <h1 className="text-xs-center">Sign in</h1>
-                        <p className="text-xs-center">
-                            {/* <Link to="/">Need an account?</Link> */}
-                            <p>Need an account?</p>
+                        <h1 className="text-center">Sign in</h1>
+                        <p className="text-center">
+                            <div className='text-center'>
+                                <a href='/register' className='need' style={{ color: '#5CB85C' }}>
+                                    Have an account?
+                                </a>
+                            </div>
                         </p>
                         <form onSubmit={handleSubmit} className='container mt-9'>
                             <div className=''>
