@@ -28,8 +28,8 @@ const LoginPage = () => {
             }
         });
         console.log(users);
-        // setToken(users.user.token);
-        // console.log(token);
+        setToken(users.user.token);
+        console.log(token);
     }
 
 
@@ -43,7 +43,6 @@ const LoginPage = () => {
                             {/* <Link to="/">Need an account?</Link> */}
                             <p>Need an account?</p>
                         </p>
-
                         <form onSubmit={handleSubmit} className='container mt-9'>
                             <div className=''>
                                 <div className='form-group'>
