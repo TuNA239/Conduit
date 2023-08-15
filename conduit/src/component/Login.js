@@ -22,7 +22,6 @@ const LoginPage = () => {
                             <p>Need an account?</p>
                         </p>
 
-
                         <form onSubmit={submit} className='container mt-9'>
                             <div className=''>
                                 <div className='form-group'>
