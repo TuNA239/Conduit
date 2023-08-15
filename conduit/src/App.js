@@ -1,13 +1,28 @@
+import { createContext, useState } from 'react';
 import './App.css';
-import LoginPage from './component/Login';
+import Login from './component/Login';
+import Register from './component/Register';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
+export const UserContext = createContext();
+const router = createBrowserRouter([
+  {path:"/register",
+  element:<Register/>
+  },
+  {path:"/login",
+  element:<Login/>
+  },
+])
 
 function App() {
+  const [user,setUser] =useState({});
+
   return (
-    <div className="App">
-      <LoginPage/>
-    </div>
+    <UserContext.Provider value={{user,setUser}}>
+    <RouterProvider router={router}/>
+    </UserContext.Provider>
   );
 }
 
 export default App;
+
