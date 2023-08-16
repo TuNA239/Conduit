@@ -10,34 +10,31 @@ import {
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 
-
-
 const Register = () => {
   const nav = useNavigate();
-  const{setUser} = useContext(UserContext);
-  const [name, setName] = useState('');
+  const { setUser } = useContext(UserContext);
+  const [username, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(true);
 
+  const handleRegister = (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
 
-
-  const handleRegister = (values) => {
     const data = {
       user: {
-        ...values,
+        username,
+        email,
+        password,
       },
-
-      
-
     };
 
-    axios.post("https://api.realworld.io/api/users", data)
+    axios
+      .post('https://api.realworld.io/api/users', data)
       .then((res) => {
         setUser(res.data.user);
         localStorage.setItem('userToken', res.data.user.token);
-        nav("/");
+        nav('/login');
       })
       .catch((error) => {
         setErrorMessage(false);
@@ -46,25 +43,23 @@ const Register = () => {
         setErrorMessage(`${key} ${errors[key][0]}`);
         console.log(errors);
       });
-    }
-    return (
-      <MDBContainer
-        fluid
-        className='d-flex align-items-center justify-content-center bg-image'
-        style={{
-          backgroundImage:
-            'url(https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp)',
-        }}
-      >
-        <div className='mask gradient-custom-3'></div>
-        <MDBCard className='m-5' style={{ maxWidth: '600px' }}>
-          <MDBCardBody style={{ width: '30rem', height: 'auto' }}>
-            <h2 className='text-uppercase text-center mb-5'>Sign Up</h2>
-            {!errorMessage && (
-              <div className='alert alert-danger' role='alert'>
-                {errorMessage}
-              </div>
-            )}
+  };
+
+  return (
+    <MDBContainer
+      fluid
+      className='d-flex align-items-center justify-content-center bg-image'
+    >
+      <div className='mask gradient-custom-3'></div>
+      <MDBCard className='m-5' style={{ maxWidth: '600px' }}>
+        <MDBCardBody style={{ width: '30rem', height: 'auto' }}>
+          <h2 className='text-uppercase text-center mb-5'>Sign Up</h2>
+          {!errorMessage && (
+            <div className='alert alert-danger' role='alert'>
+              {errorMessage}
+            </div>
+          )}
+          <form onSubmit={handleRegister}> {/* Wrap the form fields with a form element */}
             <MDBInput
               wrapperClass='mb-4'
               label='Your Name'
@@ -72,7 +67,7 @@ const Register = () => {
               id='form1'
               type='text'
               required
-              value={name}
+              value={username}
               onChange={(e) => setName(e.target.value)}
             />
             <MDBInput
@@ -95,16 +90,6 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <MDBInput
-              wrapperClass='mb-4'
-              label='Repeat your password'
-              size='lg'
-              id='form4'
-              type='password'
-              required
-              value={repeatPassword}
-              onChange={(e) => setRepeatPassword(e.target.value)}
-            />
             <div className='text-center'>
               <a href='/login' className='need' style={{ color: '#5CB85C' }}>
                 Have an account?
@@ -118,16 +103,15 @@ const Register = () => {
                 backgroundColor: '#5CB85C',
                 borderColor: '#5CB85C',
               }}
-              onSubmit={(values) => handleRegister(values)}
+              type='submit'
             >
               Register
             </MDBBtn>
-          </MDBCardBody>
-        </MDBCard>
-      </MDBContainer>
-    );
-  
-}
+          </form>
+        </MDBCardBody>
+      </MDBCard>
+    </MDBContainer>
+  );
+};
+
 export default Register;
-
-

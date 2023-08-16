@@ -42,7 +42,7 @@ const LoginPage = () => {
                         <p className="text-center">
                             <div className='text-center'>
                                 <a href='/register' className='need' style={{ color: '#5CB85C' }}>
-                                    Have an account?
+                                    Need an account?
                                 </a>
                             </div>
                         </p>
