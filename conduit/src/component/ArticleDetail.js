@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useEffect, useState }  from "react";
 
 const ArticleDetail = () => {
+
   return (
     <div className="article-page">
       <div className="banner">
         <div className="fluid">
           <div className=" d-block text-center text-bg-dark text-white">
-            <h1>conduit</h1>
+            <h1 className="pt-4 pb-3">conduit</h1>
 
-            <div className="container article-meta d-flex align-items-center gap-3">
+            <div className="container article-meta d-flex align-items-center gap-3 pb-4">
               <a className="d-inline-block">
                 {/* <img src={articles.author.image} alt="error" /> */}
                 <img
@@ -18,11 +19,11 @@ const ArticleDetail = () => {
                 ></img>
               </a>
 
-              <div className="info p-5">
-                <a className="no-underline hover:underline hover:cursor-pointer">
+              <div className="info" style={{gap:'10px'}}>
+                <a className="no-underline hover:underline hover:cursor-pointer" style={{color:'white'}}>
                   {/* {articles.author.username} */}Anah Benešová
                 </a>
-                <span className="feed-date d-block ">
+                <span className="feed-date d-block" style={{color:'#bbb', fontSize:'0.8rem'}}>
                   {/* {formatDate(articles.updatedAt)} */}Fri Dec 09 2022
                 </span>
               </div>
@@ -62,55 +63,59 @@ const ArticleDetail = () => {
             </div>
 
             <div className="text-start">
-              <ul className="tag-list d-inline-block " style={{}}>
+              <ul className="tag-list d-inline-block ">
                 <li
                   style={{
                     border: "1px solid #ddd",
-                    color: "",
+                    color: "rgb(193, 190, 190)",
                     fontSize: "0.8rem",
                     borderRadius: "10rem",
                   }}
-                  class="tag-default tag-pill tag-outline d-inline-block p-1 m-1"
+                  className="tag-default tag-pill tag-outline d-inline-block pt-1 pb-1 pl-2 pr-2 m-1"
                 >
                   voluptate
                 </li>
                 <li
                   style={{
                     border: "1px solid #ddd",
-                    color: "",
+                    color: "rgb(193, 190, 190)",
                     fontSize: "0.8rem",
                     borderRadius: "10rem",
                   }}
-                  class="tag-default tag-pill tag-outline d-inline-block p-1 m-1"
+                  className="tag-default tag-pill tag-outline d-inline-block pt-1 pb-1 pl-2 pr-2 m-1"
                 >
                   rerum
                 </li>
                 <li
                   style={{
                     border: "1px solid #ddd",
-                    color: "",
+                    color: "rgb(193, 190, 190)",
                     fontSize: "0.8rem",
                     borderRadius: "10rem",
                   }}
-                  class="tag-default tag-pill tag-outline d-inline-block p-1 m-1"
+                  className="tag-default tag-pill tag-outline d-inline-block pt-1 pb-1 pl-2 pr-2 m-1"
                 >
                   ducimus
                 </li>
                 <li
                   style={{
                     border: "1px solid #ddd",
-                    color: "",
+                    color: "rgb(193, 190, 190)",
                     fontSize: "0.8rem",
                     borderRadius: "10rem",
                   }}
-                  class="tag-default tag-pill tag-outline d-inline-block p-1 m-1"
+                  className="tag-default tag-pill tag-outline d-inline-block pt-1 pb-1 pl-2 pr-2 m-1"
                 >
                   hic
                 </li>
               </ul>
             </div>
+
+            <div className="mt-3" style={{borderBottom:'1px solid lightGray'}}></div>
+
           </div>
         </div>
+
       </div>
       <div className="row">
         <div className="col-xs-12 col-md-8 offset-md-2">
@@ -129,14 +134,14 @@ const ArticleDetail = () => {
                 ></textarea>
               </div>
 
-              <div className="card-footer d-block p-3" >
-
-                <img style={{width:'2rem', float:'float-start', borderRadius:'50%', marginRight:'170px'}}
+              <div className="card-footer d-flex justify-content-between align-items-center p-3" >
+               
+                <img style={{width:'2rem', float:'float-start', borderRadius:'50%'}}
                   src="https://api.realworld.io/images/smiley-cyrus.jpeg"
                   className="comment-author-img d-inline-block"
                   alt="HastyAlvin"
                 ></img>
-                <button style={{marginLeft:'170px'}}  className="btn btn-sm btn-success " type="submit">
+                <button className="btn btn-sm btn-success " type="submit">
                   Post Comment
                 </button>
               </div>
