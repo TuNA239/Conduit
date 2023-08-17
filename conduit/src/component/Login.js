@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const LoginPage = () => {
+    const nav = useNavigate()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -31,18 +32,19 @@ const LoginPage = () => {
 
             const user = await res.json();
             console.log(user);
-            // Do something with the user data, e.g., set it to state or navigate to another page.
+            console.log(user.user.token);
+            localStorage.setItem('userToken',user.user.token)
+            // nav('/register')
         } catch (error) {
             if (error.errors) {
-                setError(error);
+                const errorMessage = Object.keys(error.errors) + ' ' + Object.values(error.errors)
+                setError(errorMessage);
             } else {
                 setError('An error occurred');
             }
             console.log('Error:', error);
         }
     };
-
-    console.log(...Object.entries(error));
     return (
         <div className="auth-page">
             <div className="container page">
@@ -57,7 +59,7 @@ const LoginPage = () => {
                             </div>
                         </p>
                         <form onSubmit={handleSubmit} className='container mt-9'>
-                            {/* {error && <div className="text-center text-danger mt-3">{error}</div>} */}
+                            {error && <div className="text-center text-danger mt-3" style={{ color: '#B85C5C', fontWeight: 'bold' }}>{error}</div>}
                             <div className=''>
                                 <div className='form-group'>
                                     <input
@@ -65,7 +67,7 @@ const LoginPage = () => {
                                         type='text'
                                         placeholder='Email'
                                         className='form-control form-control-lg mb-6'
-                                        required
+                                        // required
                                         value={email}
                                         onChange={e => setEmail(e.target.value)}
                                     />
@@ -74,7 +76,7 @@ const LoginPage = () => {
                                         type='password'
                                         placeholder='Password'
                                         className='form-control form-control-lg mb-6'
-                                        required
+                                        // required
                                         value={password}
                                         onChange={e => setPassword(e.target.value)}
                                     />
