@@ -19,13 +19,28 @@ for (let number = 1; number <= 20; number++) {
 const HomePage = () => {
     const [articles, setArticles] = useState([]);
     const [activePage, setActivePage] = useState(1);
+    const [token, setToken] = useState(localStorage.getItem('userToken'));
 
 
     useEffect(() => {
-        fetch('https://api.realworld.io/api/articles')
-            .then(response => response.json())
-            .then(data => setArticles(data.articles))
-            .catch(error => console.error('Error fetching articles:', error));
+        if(token){
+            fetch('https://api.realworld.io/api/articles', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+                .then(console.log(token))
+                .then(response => response.json())
+                .then(data => setArticles(data.articles))
+                .catch(error => console.error('Error fetching articles:', error));
+        }
+        else{
+            fetch('https://api.realworld.io/api/articles')
+                .then(response => response.json())
+                .then(data => setArticles(data.articles))
+                .catch(error => console.error('Error fetching articles:', error));
+        }
     }, []);
 
     const handlePageChange = (pageNumber) => {

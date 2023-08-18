@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Header from './Home/Header';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 const Editor = () => {
   // Khởi tạo các trạng thái sử dụng useState
@@ -11,19 +12,20 @@ const Editor = () => {
   const [tagList, setTagList] = useState([]);
   const [token, setToken] = useState(localStorage.getItem('userToken'));
   const [user, setUser] = useState();
+  const [article, setArticle] = useState();
 
   //get user data
   useEffect(() => {
-    fetch('https://api.realworld.io/api/user',{
+    fetch('https://api.realworld.io/api/user', {
       method: 'GET',
-      headers:{
+      headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then(response => response.json())
       .then(data => {
         setUser(data.user)
-        console.log(data.user);
+        // console.log(data.user);
       })
       .catch(error => console.error('Error fetching user:', error));
   }, []);
@@ -71,33 +73,39 @@ const Editor = () => {
 
   // Hàm xử lý sự kiện nhấn nút "Publish Article"
   const submitForm = async e => {
-    // const article = {
-    //   title,
-    //   description,
-    //   body,
-    //   tagList
-    // };
     e.preventDefault();
-    try {
-      const res = await fetch('https://node-express-conduit.appspot.com/api/articles', {
-        method: 'POST',
-        headers: {
-          'accept': 'application/json',
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+    axios.post(
+      'https://api.realworld.io/api/articles?limit=10&offset=0',
+      {
+        article: {
+          title: title,
+          description: description,
+          body: body,
+          tagList: tagList,
         },
-        body: JSON.stringify({
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body:JSON.stringify({
           article: {
-            title,
-            description,
-            body,
-            tagList
+            title: title,
+            description: description,
+            body: body,
+            tagList: tagList,
           }
         })
+      }
+    )
+      .then((res) => {
+        console.log(res);
+        // console.log(res.data.errors);
       })
-    } catch (error) {
-      console.log(error);
-    }
+      .catch((error) => {
+        console.error('Error publishing article:', error);
+      });
   };
 
   return (
@@ -106,7 +114,7 @@ const Editor = () => {
       <div className="container page">
         <div className="row p-4">
           <div className="col-md-10 offset-md-1 col-xs-12 ">
-            <form>
+            <form onSubmit={submitForm}>
               <fieldset>
                 <fieldset className="form-group p-2">
                   <input
@@ -158,8 +166,8 @@ const Editor = () => {
                 </fieldset>
                 <button
                   className="btn btn-lg pull-xs-right btn-success my-3 "
-                  type="button"
-                  onClick={submitForm}
+                  type="submit"
+                  
                 >
                   Publish Article
                 </button>
