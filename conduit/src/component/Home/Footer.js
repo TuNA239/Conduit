@@ -5,7 +5,7 @@ const Footer = () => {
     return (
         <footer>
             <a href="https://github.com/" className='text-slate-50 no-underline hover:underline'>
-                <i class="fa-brands fa-github"></i>
+                <i className="fa-brands fa-github"></i>
                 &nbsp; Fork on GitHub
             </a>
         </footer>

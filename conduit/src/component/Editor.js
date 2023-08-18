@@ -78,53 +78,53 @@ const submitForm = () => {
   };
 
   return (
-    <div class="editor-page">
-      <div class="container page">
-        <div class="row p-4">
-          <div class="col-md-10 offset-md-1 col-xs-12 ">
+    <div className="editor-page">
+      <div className="container page">
+        <div className="row p-4">
+          <div className="col-md-10 offset-md-1 col-xs-12 ">
             <form>
               <fieldset>
-                <fieldset class="form-group p-2">
+                <fieldset className="form-group p-2">
                   <input
                     type="text"
-                    class="form-control form-control-lg"
+                    className="form-control form-control-lg"
                     placeholder="Article Title"
                     value={title}
                     onChange={changeTitle}
                   />
                 </fieldset>
-                <fieldset class="form-group p-2">
+                <fieldset className="form-group p-2">
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     placeholder="What's this article about?"
                     value={description}
                     onChange={changeDescription}
                   />
                 </fieldset>
-                <fieldset class="form-group p-2">
+                <fieldset className="form-group p-2">
                   <textarea
-                    class="form-control"
+                    className="form-control"
                     rows="8"
                     placeholder="Write your article (in markdown)"
                     value={body}
                     onChange={changeBody}
                   ></textarea>
                 </fieldset>
-                <fieldset class="form-group p-2">
+                <fieldset className="form-group p-2">
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     placeholder="Enter tags"
                     value={tagInput}
                     onChange={changeTagInput}
                     onKeyUp={watchForEnter}
                   />
-                  <div class="tag-list">
+                  <div className="tag-list">
                     {tagList.map(tag => (
-                      <span class="tag-default tag-pill" key={tag}>
+                      <span className="tag-default tag-pill" key={tag}>
                         <i
-                          class="ion-close-round"
+                          className="ion-close-round"
                           onClick={() => removeTagHandler(tag)}
                         ></i>
                         {tag}
@@ -133,7 +133,7 @@ const submitForm = () => {
                   </div>
                 </fieldset>
                 <button
-                  class="btn btn-lg pull-xs-right btn-success my-3 "
+                  className="btn btn-lg pull-xs-right btn-success my-3 "
                   type="button"
                   onClick={submitForm}
                 >
