@@ -4,6 +4,7 @@ import Register from './component/Register';
 import LoginPage from './component/Login';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import HomePage from './component/Home/HomePage';
+import Editor from './component/Editor';
 
 export const UserContext = createContext();
 
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <HomePage />
   },
+  {
+    path: "/editor",
+    element: <Editor/>
+  }
 ]);
 
 function App() {

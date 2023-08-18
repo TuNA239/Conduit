@@ -1,14 +1,35 @@
 import React, { useState } from 'react';
+import Header from './Home/Header';
+import { useEffect } from 'react';
 
 const Editor = () => {
- // Khởi tạo các trạng thái sử dụng useState
+  // Khởi tạo các trạng thái sử dụng useState
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [body, setBody] = useState('');
   const [tagInput, setTagInput] = useState('');
   const [tagList, setTagList] = useState([]);
+  const [token, setToken] = useState(localStorage.getItem('userToken'));
+  const [user, setUser] = useState();
 
-    // Hàm xử lý sự kiện thay đổi tiêu đề
+  //get user data
+  useEffect(() => {
+    fetch('https://api.realworld.io/api/user',{
+      method: 'GET',
+      headers:{
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        setUser(data.user)
+        console.log(data.user);
+      })
+      .catch(error => console.error('Error fetching user:', error));
+  }, []);
+
+
+  // Hàm xử lý sự kiện thay đổi tiêu đề
   const changeTitle = event => {
     setTitle(event.target.value);
   };
@@ -18,17 +39,17 @@ const Editor = () => {
     setDescription(event.target.value);
   };
 
-   // Hàm xử lý sự kiện thay đổi nội dung bài viết
+  // Hàm xử lý sự kiện thay đổi nội dung bài viết
   const changeBody = event => {
     setBody(event.target.value);
   };
 
-    // Hàm xử lý sự kiện thay đổi trường nhập tag
+  // Hàm xử lý sự kiện thay đổi trường nhập tag
   const changeTagInput = event => {
     setTagInput(event.target.value);
   };
 
-   // Hàm xử lý sự kiện nhấn phím Enter để thêm tag
+  // Hàm xử lý sự kiện nhấn phím Enter để thêm tag
   const watchForEnter = ev => {
     if (ev.keyCode === 13) {
       ev.preventDefault();
@@ -36,49 +57,52 @@ const Editor = () => {
     }
   };
 
-   // Hàm thêm tag vào danh sách tag
-   const addTag = () => {
+  // Hàm thêm tag vào danh sách tag
+  const addTag = () => {
     if (!tagInput) return;
     setTagList([...tagList, tagInput]);
     setTagInput('');
   };
 
-   // Hàm xử lý sự kiện loại bỏ tag
-   const removeTagHandler = tag => {
+  // Hàm xử lý sự kiện loại bỏ tag
+  const removeTagHandler = tag => {
     setTagList(tagList.filter(item => item !== tag));
   };
 
-    // Hàm xử lý sự kiện nhấn nút "Publish Article"
-const submitForm = () => {
-    const article = {
-      title,
-      description,
-      body,
-      tagList
-    };
-
-    // Simulating the promise without agent
-    const promise = new Promise((resolve, reject) => {
-      // Simulate API call success
-      setTimeout(() => {
-        resolve(); // Assuming success
-      }, 1000);
-    });
-
-    // Handle the promise and any success/error logic here
-    promise
-      .then(() => {
-        // Handle success
-        console.log('Article created successfully');
+  // Hàm xử lý sự kiện nhấn nút "Publish Article"
+  const submitForm = async e => {
+    // const article = {
+    //   title,
+    //   description,
+    //   body,
+    //   tagList
+    // };
+    e.preventDefault();
+    try {
+      const res = await fetch('https://node-express-conduit.appspot.com/api/articles', {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          article: {
+            title,
+            description,
+            body,
+            tagList
+          }
+        })
       })
-      .catch(error => {
-        // Handle error
-        console.error('Error creating article:', error);
-      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div className="editor-page">
+      <Header />
       <div className="container page">
         <div className="row p-4">
           <div className="col-md-10 offset-md-1 col-xs-12 ">

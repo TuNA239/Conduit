@@ -29,7 +29,7 @@ const Header = () => {
                         <a href='/' className='nav-link' style={{ color: 'gray' }}>Home</a>
                     </li>
                     <li className='nav-item'>
-                        <a href='/' className='nav-link linkHeader' style={{ color: 'lightGray' }}>
+                        <a href='/editor' className='nav-link linkHeader' style={{ color: 'lightGray' }}>
                             <i className='fa fa-square-pen'></i>
                             &nbsp; New Article
                         </a>
