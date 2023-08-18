@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './style.css';
 import { UserContext } from '../../App';
 import { useContext } from 'react';
 const Header = () => {
-    const { token } = useContext(UserContext)
-    console.log(token);
+    const [token, setToken] = useState(localStorage.getItem('userToken'))
 
     return (
         <nav className='navbar navbar-light'>

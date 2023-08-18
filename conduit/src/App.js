@@ -24,11 +24,10 @@ const router = createBrowserRouter([
 
 function App() {
   const [user, setUser] = useState({});
-  const [token, setToken] = useState(localStorage.getItem('userToken'));
 
   return (
-    <UserContext.Provider value={{ user, setUser, token }}>
-      <RouterProvider router={router} token={token} />
+    <UserContext.Provider value={{ user, setUser }}>
+      <RouterProvider router={router}/>
     </UserContext.Provider>
   );
 }

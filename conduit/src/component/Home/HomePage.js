@@ -17,11 +17,9 @@ for (let number = 1; number <= 20; number++) {
 }
 
 const HomePage = () => {
-    const {token} = useContext(UserContext)
     const [articles, setArticles] = useState([]);
     const [activePage, setActivePage] = useState(1);
 
-    // console.log(token);
 
     useEffect(() => {
         fetch('https://api.realworld.io/api/articles')

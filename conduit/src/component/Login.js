@@ -8,7 +8,7 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
+    localStorage.clear();
     const handleSubmit = async e => {
         e.preventDefault();
         try {

@@ -18,6 +18,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(true);
+  localStorage.clear();
 
   const handleRegister = (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
