@@ -1,24 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import './style.css';
 import Pagination from 'react-bootstrap/Pagination';
+import { UserContext } from '../../App';
 
 
 let active = 1;
 let items = [];
 for (let number = 1; number <= 20; number++) {
-  items.push(
-    <Pagination.Item key={number} active={number === active} className='pagination-item'>
-      {number}
-    </Pagination.Item>,
-  );
+    items.push(
+        <Pagination.Item key={number} active={number === active} className='pagination-item'>
+            {number}
+        </Pagination.Item>,
+    );
 }
 
 const HomePage = () => {
-
+    const {token} = useContext(UserContext)
     const [articles, setArticles] = useState([]);
     const [activePage, setActivePage] = useState(1);
+
+    // console.log(token);
 
     useEffect(() => {
         fetch('https://api.realworld.io/api/articles')
@@ -39,8 +42,8 @@ const HomePage = () => {
 
     return (
         <div>
-            <Header/>
-            
+            <Header />
+
             <div className='banner'>
                 <div className='container text-center'>
                     <h1>conduit</h1>
@@ -60,13 +63,13 @@ const HomePage = () => {
                             </li> */}
                         </ul>
                     </div>
-                
+
                     {articles.map(articles => (
                         <div key={articles.slug} className='article-preview'>
                             <div className='d-flex justify-between align-items-center'>
                                 <div className='article-meta d-flex align-items-center gap-3'>
                                     <a className='d-inline-block'>
-                                        <img src={articles.author.image} alt='error'/>
+                                        <img src={articles.author.image} alt='error' />
                                     </a>
                                     <div className='info'>
                                         <a className='no-underline hover:underline hover:cursor-pointer'>{articles.author.username}</a>
@@ -74,9 +77,9 @@ const HomePage = () => {
                                     </div>
                                 </div>
 
-                                <button className='btn btn-sm btn-outline-success btn-heart' style={{borderColor:'#5CB85C'}}>
+                                <button className='btn btn-sm btn-outline-success btn-heart' style={{ borderColor: '#5CB85C' }}>
                                     <i className='fa fa-heart'></i>
-                                    <span className='ml-1' style={{fontWeight:'400'}}>{articles.favoritesCount}</span>
+                                    <span className='ml-1' style={{ fontWeight: '400' }}>{articles.favoritesCount}</span>
                                 </button>
                             </div>
 
@@ -91,12 +94,12 @@ const HomePage = () => {
                                             <li key={tag} className='tag-item hover:cursor-pointer'>{tag}</li>
                                         ))}
                                     </ul>
-                                </div>         
+                                </div>
                             </div>
 
                         </div>
                     ))}
-                    
+
                 </div>
 
                 <div className='col-md-3'>
@@ -121,7 +124,7 @@ const HomePage = () => {
 
             <Pagination className='mr-32 ml-32 pagination'>{items}</Pagination>
 
-            <Footer/>
+            <Footer />
         </div>
     );
 }

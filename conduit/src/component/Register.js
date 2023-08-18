@@ -9,6 +9,7 @@ import {
   MDBInput,
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
+import Header from './Home/Header';
 
 const Register = () => {
   const nav = useNavigate();
@@ -34,7 +35,7 @@ const Register = () => {
       .then((res) => {
         setUser(res.data.user);
         localStorage.setItem('userToken', res.data.user.token);
-        nav('/login');
+        nav('/');
       })
       .catch((error) => {
         setErrorMessage(false);
@@ -46,71 +47,74 @@ const Register = () => {
   };
 
   return (
-    <MDBContainer
-      fluid
-      className='d-flex align-items-center justify-content-center bg-image'
-    >
-      <div className='mask gradient-custom-3'></div>
-      <MDBCard className='m-5' style={{ maxWidth: '600px' }}>
-        <MDBCardBody style={{ width: '30rem', height: 'auto' }}>
-          <h2 className='text-uppercase text-center mb-5'>Sign Up</h2>
-          {!errorMessage && (
-            <div className='alert alert-danger' role='alert'>
-              {errorMessage}
-            </div>
-          )}
-          <form onSubmit={handleRegister}> {/* Wrap the form fields with a form element */}
-            <MDBInput
-              wrapperClass='mb-4'
-              label='Your Name'
-              size='lg'
-              id='form1'
-              type='text'
-              required
-              value={username}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <MDBInput
-              wrapperClass='mb-4'
-              label='Your Email'
-              size='lg'
-              id='form2'
-              type='email'
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <MDBInput
-              wrapperClass='mb-4'
-              label='Password'
-              size='lg'
-              id='form3'
-              type='password'
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <div className='text-center'>
-              <a href='/login' className='need' style={{ color: '#5CB85C' }}>
-                Have an account?
-              </a>
-            </div>
-            <MDBBtn
-              className='mb-4 w-100'
-              size='lg'
-              style={{
-                color: 'white',
-                backgroundColor: '#5CB85C',
-                borderColor: '#5CB85C',
-              }}
-              type='submit'
-            >
-              Register
-            </MDBBtn>
-          </form>
-        </MDBCardBody>
-      </MDBCard>
-    </MDBContainer>
+    <>
+      <Header />
+      <MDBContainer
+        fluid
+        className='d-flex align-items-center justify-content-center bg-image'
+      >
+        <div className='mask gradient-custom-3'></div>
+        <MDBCard className='m-5' style={{ maxWidth: '600px' }}>
+          <MDBCardBody style={{ width: '30rem', height: 'auto' }}>
+            <h2 className='text-uppercase text-center mb-5'>Sign Up</h2>
+            {!errorMessage && (
+              <div className='alert alert-danger' role='alert'>
+                {errorMessage}
+              </div>
+            )}
+            <form onSubmit={handleRegister}> {/* Wrap the form fields with a form element */}
+              <MDBInput
+                wrapperClass='mb-4'
+                label='Your Name'
+                size='lg'
+                id='form1'
+                type='text'
+                required
+                value={username}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <MDBInput
+                wrapperClass='mb-4'
+                label='Your Email'
+                size='lg'
+                id='form2'
+                type='email'
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <MDBInput
+                wrapperClass='mb-4'
+                label='Password'
+                size='lg'
+                id='form3'
+                type='password'
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <div className='text-center'>
+                <a href='/login' className='need' style={{ color: '#5CB85C' }}>
+                  Have an account?
+                </a>
+              </div>
+              <MDBBtn
+                className='mb-4 w-100'
+                size='lg'
+                style={{
+                  color: 'white',
+                  backgroundColor: '#5CB85C',
+                  borderColor: '#5CB85C',
+                }}
+                type='submit'
+              >
+                Register
+              </MDBBtn>
+            </form>
+          </MDBCardBody>
+        </MDBCard>
+      </MDBContainer>
+    </>
   );
 };
 

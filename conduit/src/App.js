@@ -6,6 +6,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import HomePage from './component/Home/HomePage';
 
 export const UserContext = createContext();
+
 const router = createBrowserRouter([
   {
     path: "/register",
@@ -19,17 +20,17 @@ const router = createBrowserRouter([
     path: "/",
     element: <HomePage />
   },
-])
+]);
 
 function App() {
   const [user, setUser] = useState({});
+  const [token, setToken] = useState(localStorage.getItem('userToken'));
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      <RouterProvider router={router} />
+    <UserContext.Provider value={{ user, setUser, token }}>
+      <RouterProvider router={router} token={token} />
     </UserContext.Provider>
   );
 }
 
 export default App;
-

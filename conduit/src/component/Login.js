@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import Header from './Home/Header';
 
 const LoginPage = () => {
     const nav = useNavigate()
@@ -33,8 +34,8 @@ const LoginPage = () => {
             const user = await res.json();
             console.log(user);
             console.log(user.user.token);
-            localStorage.setItem('userToken',user.user.token)
-            // nav('/register')
+            localStorage.setItem('userToken', user.user.token)
+            nav('/')
         } catch (error) {
             if (error.errors) {
                 const errorMessage = Object.keys(error.errors) + ' ' + Object.values(error.errors)
@@ -47,6 +48,7 @@ const LoginPage = () => {
     };
     return (
         <div className="auth-page">
+            <Header />
             <div className="container page">
                 <div className="row mt-5">
                     <div className="col-md-6 offset-md-3 col-xs-12">
