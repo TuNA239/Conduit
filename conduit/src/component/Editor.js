@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Header from './Home/Header';
 import { useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Editor = () => {
   // Khởi tạo các trạng thái sử dụng useState
@@ -13,6 +14,7 @@ const Editor = () => {
   const [token, setToken] = useState(localStorage.getItem('userToken'));
   const [user, setUser] = useState();
   const [article, setArticle] = useState();
+  const nav = useNavigate()
 
   //get user data
   useEffect(() => {
@@ -25,7 +27,7 @@ const Editor = () => {
       .then(response => response.json())
       .then(data => {
         setUser(data.user)
-        // console.log(data.user);
+        console.log(data.user);
       })
       .catch(error => console.error('Error fetching user:', error));
   }, []);
@@ -101,6 +103,7 @@ const Editor = () => {
     )
       .then((res) => {
         console.log(res);
+        nav('/')
         // console.log(res.data.errors);
       })
       .catch((error) => {
