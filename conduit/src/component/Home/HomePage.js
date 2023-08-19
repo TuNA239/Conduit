@@ -20,22 +20,38 @@ const HomePage = () => {
     const [articles, setArticles] = useState([]);
     const [activePage, setActivePage] = useState(1);
     const [token, setToken] = useState(localStorage.getItem('userToken'));
+    const [user, setUser] = useState();
+
+    // useEffect(() => {
+    //     fetch('https://api.realworld.io/api/user', {
+    //         method: 'GET',
+    //         headers: {
+    //             'Authorization': `Bearer ${token}`
+    //         }
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setUser(data.user)
+    //             console.log(data.user);
+    //         })
+    //         .catch(error => console.error('Error fetching user:', error));
+    // }, []);
 
 
     useEffect(() => {
-        if(token){
+        if (token) {
             fetch('https://api.realworld.io/api/articles', {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 }
             })
-                .then(console.log(token))
+                // .then(console.log(token))
                 .then(response => response.json())
                 .then(data => setArticles(data.articles))
                 .catch(error => console.error('Error fetching articles:', error));
         }
-        else{
+        else {
             fetch('https://api.realworld.io/api/articles')
                 .then(response => response.json())
                 .then(data => setArticles(data.articles))

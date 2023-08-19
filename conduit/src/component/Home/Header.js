@@ -2,8 +2,26 @@ import React, { useState } from 'react';
 import './style.css';
 import { UserContext } from '../../App';
 import { useContext } from 'react';
+import { useEffect } from 'react';
 const Header = () => {
     const [token, setToken] = useState(localStorage.getItem('userToken'))
+    const [user, setUser] = useState();
+
+    useEffect(() => {
+        fetch('https://api.realworld.io/api/user', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                setUser(data.user)
+                console.log(data.user);
+            })
+            .catch(error => console.error('Error fetching user:', error));
+    }, []);
+
 
     return (
         <nav className='navbar navbar-light'>
@@ -43,7 +61,8 @@ const Header = () => {
                     <li className='nav-item'>
                         <a href='/' className='nav-link d-flex align-items-center linkHeader' style={{ color: 'lightGray' }}>
                             <i className='fa fa-face-laugh-squint fs-4'></i>
-                            &nbsp; Account
+                            {/* <img src= {user.image} className='h-10 w-10'/> */}
+                            &nbsp; {user.username}
                         </a>
                     </li>
                 </ul>}
