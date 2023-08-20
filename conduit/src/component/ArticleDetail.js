@@ -202,8 +202,8 @@ const ArticleDetail = () => {
                 </div>
               </form>
             </div>
-          </div>{" "}
-        </div>{" "}
+          </div>
+        </div>
 
 
         <div className="comment">
