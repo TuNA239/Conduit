@@ -59,7 +59,7 @@ const Header = () => {
                         </a>
                     </li>
                     <li className='nav-item'>
-                        <a href='/' className='nav-link linkHeader' style={{ color: 'lightGray' }}>
+                        <a href='/setting' className='nav-link linkHeader' style={{ color: 'lightGray' }}>
                             <i className='fa fa-gear'></i>
                             &nbsp; Settings
                         </a>

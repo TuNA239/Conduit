@@ -7,6 +7,7 @@ const ArticleDetail = () => {
   const { slug } = useParams();
   const [token, setToken] = useState(localStorage.getItem("userToken"));
   const [article, setArticle] = useState();
+  const [comment, setComment] = useState();
   const [user, setUser] = useState();
   const nav = useNavigate();
   // console.log(slug);
@@ -15,6 +16,13 @@ const ArticleDetail = () => {
     fetch(`https://api.realworld.io/api/articles/${slug}`)
       .then((response) => response.json())
       .then((data) => setArticle(data))
+      .catch((error) => console.error("Error fetching articles:", error));
+  }, []);
+
+  useEffect(() => {
+    fetch(`https://api.realworld.io/api/articles/${slug}/comments`)
+      .then((response) => response.json())
+      .then((data) => setComment(data.comments))
       .catch((error) => console.error("Error fetching articles:", error));
   }, []);
 
@@ -34,6 +42,7 @@ const ArticleDetail = () => {
   }, []);
 
   console.log(article);
+  console.log(comment);
 
   const handleEdit = () => {
     nav(`/edit/${slug}`);
@@ -112,7 +121,7 @@ const ArticleDetail = () => {
             <div className="row article-content">
               <div className="col-xs-12">
                 <div>
-                  <p style={{ textAlign: "initial" }}>{article.article.body}</p>
+                  <p style={{ textAlign: "initial", fontSize: "1.25em" }}>{article.article.body}</p>
                 </div>
               </div>
 
@@ -195,52 +204,53 @@ const ArticleDetail = () => {
             </div>
           </div>{" "}
         </div>{" "}
-        <div className="comment">
-        <div className="col-xs-12 col-md-8 offset-md-2">
-            <div>
-              <form
-                method="POST"
-                action="?/postComment"
-                className="card comment-form m-5"
-              >
-                <div className="card-block ">
-                  <textarea
-                    className="form-control "
-                    name="comment"
-                    rows="3"
-                  ></textarea>
-                </div>
 
-                <div className="card-footer d-flex justify-content-between align-items-center p-3">
-                 <div>
-                 <img
-                    style={{
-                      width: "2rem",
-                      float: "float-start",
-                      borderRadius: "50%",
-                    }}
-                    src="https://api.realworld.io/images/smiley-cyrus.jpeg"
-                    className="comment-author-img d-inline-block"
-                    alt="HastyAlvin"
-                  ></img>
-                  <a className="no-underline hover:underline hover:cursor-pointer p-1 "style={{ color: "Gray" }}>
-                    {/* {articles.author.username} */}
-                    {article.article.author.username}
-                  </a>
-                  <span className="feed-date d-d-inline-block ">
-                    {formatDate(article.article.createdAt)}
-                  </span>
-                 </div>
-                 
-                  <button className="btn btn-sm ion-trash " type="submit">
-                  <i className="fa-solid fa-trash-can"></i>
-                  </button>
-                </div>
-              </form>
+
+        <div className="comment">
+          {comment.map((e, index) => (
+            <div className="col-xs-12 col-md-8 offset-md-2">
+              <div>
+                <form
+                  method="POST"
+                  action="?/postComment"
+                  className="card comment-form m-5"
+                >
+                  <div className="card-block form-control">
+                    {e.body}
+                  </div>
+                  <div className="card-footer d-flex justify-content-between align-items-center p-3">
+                    <div>
+                      <img
+                        style={{
+                          width: "2rem",
+                          float: "float-start",
+                          borderRadius: "50%",
+                        }}
+                        src={e.author.image}
+                        className="comment-author-img d-inline-block"
+                        alt="HastyAlvin"
+                      ></img>
+                      <a className="no-underline hover:underline hover:cursor-pointer p-1 " style={{ color: "Gray" }}>
+                        {/* {articles.author.username} */}
+                        {e.author.username}
+                      </a>
+                      <span className="feed-date d-d-inline-block ">
+                        {formatDate(e.createdAt)}
+                      </span>
+                    </div>
+                    {user != undefined &&
+                      user.username === e.author.username &&
+                      < button className="btn btn-sm ion-trash " type="submit">
+                        <i className="fa-solid fa-trash-can"></i>
+                      </button>
+                    }
+                  </div>
+                </form>
+              </div>
             </div>
-          </div>{" "}
-        </div>
-      </div>
+          ))}
+        </div >
+      </div >
     </>
   );
 };
