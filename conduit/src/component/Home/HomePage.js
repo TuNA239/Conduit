@@ -4,6 +4,7 @@ import Footer from './Footer';
 import './style.css';
 import Pagination from 'react-bootstrap/Pagination';
 import YourFeed from './YourFeed';
+import { useNavigate } from 'react-router-dom';
 
 
 // let active = 1;
@@ -22,26 +23,43 @@ const HomePage = () => {
     const [articles, setArticles] = useState([]);
     const [activePage, setActivePage] = useState(1);
     const [articlesCount, setArticlesCount] = useState(0);
+    const [token, setToken] = useState(localStorage.getItem('userToken'));
+    const nav = useNavigate()
 
     const limit = 10;
 
     useEffect(() => {
         const offset = (activePage - 1) * limit;
 
-        fetch(`https://api.realworld.io/api/articles?limit=${limit}&offset=${offset}`)
-            .then(response => response.json())
-            .then(data => {
-                setArticles(data.articles);
-                setArticlesCount(data.articlesCount);
+        if (token) {
+            fetch(`https://api.realworld.io/api/articles?limit=${limit}&offset=${offset}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                }
             })
-            .catch(error => console.error('Error fetching articles:', error));
+                .then(response => response.json())
+                .then(data => {
+                    setArticles(data.articles);
+                    setArticlesCount(data.articlesCount);
+                })
+                .catch(error => console.error('Error fetching articles:', error));
+        } else {
+            fetch(`https://api.realworld.io/api/articles?limit=${limit}&offset=${offset}`)
+                .then(response => response.json())
+                .then(data => {
+                    setArticles(data.articles);
+                    setArticlesCount(data.articlesCount);
+                })
+                .catch(error => console.error('Error fetching articles:', error));
+        }
     }, [activePage]);
 
     const handlePageChange = (pageNumber) => {
         setActivePage(pageNumber);
     }
 
-    const handleDetail = (slug) =>{
+    const handleDetail = (slug) => {
         nav(`/article/${slug}`)
     }
 
@@ -96,11 +114,11 @@ const HomePage = () => {
 
             <div className='pr-32 pl-32 pt-10 row'>
                 <div className='col-md-9'>
-                    <div className='feed-toggle' style={{borderBottom:'1px solid lightgray'}}>
+                    <div className='feed-toggle' style={{ borderBottom: '1px solid lightgray' }}>
                         <ul className='nav nav-pills feed-item'>
-                            <li className='nav-item'>
+                            {token && <li className='nav-item'>
                                 <a className='nav-link feed-tag'>Your Feed</a>
-                            </li>
+                            </li>}
                             <li className='nav-item'>
                                 <a className='nav-link feed-tag'>Global Feed</a>
                             </li>
@@ -109,7 +127,7 @@ const HomePage = () => {
                             </li> */}
                         </ul>
                     </div>
-                
+
                     {articles.map((articles, index) => (
                         <div key={articles.slug} className='article-preview'>
                             <div className='d-flex justify-between align-items-center'>
@@ -123,7 +141,7 @@ const HomePage = () => {
                                     </div>
                                 </div>
 
-                                <button className={`btn btn-sm btn-outline-success btn-heart ${articles.isFavorited ? 'bg-success text-white' : ''}`} style={{borderColor:'#5CB85C'}}
+                                <button className={`btn btn-sm btn-outline-success btn-heart ${articles.isFavorited ? 'bg-success text-white' : ''}`} style={{ borderColor: '#5CB85C' }}
                                     onClick={() => {
                                         if (articles.isFavorited) {
                                             decreaseFavorites(index);
@@ -133,11 +151,11 @@ const HomePage = () => {
                                     }}
                                 >
                                     <i className={`fa fa-heart ${articles.isFavorited ? 'text-white' : ''}`}></i>
-                                    <span className='ml-1' style={{fontWeight:'400'}}>{articles.favoritesCount}</span>
+                                    <span className='ml-1' style={{ fontWeight: '400' }}>{articles.favoritesCount}</span>
                                 </button>
                             </div>
 
-                            <div className='d-block' onClick={()=>handleDetail(articles.slug)}>
+                            <div className='d-block' onClick={() => handleDetail(articles.slug)}>
                                 <h1 className='article-title'>{articles.title}</h1>
                                 <p className='article-description'>{articles.description}</p>
                                 <div className='d-flex align-items-center justify-between'>
@@ -155,7 +173,7 @@ const HomePage = () => {
                     ))}
 
                     {/* <YourFeed/> */}
-                    
+
                 </div>
 
                 <div className='col-md-3'>
