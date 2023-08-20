@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Header from './Home/Header';
 import Footer from './Home/Footer';
 import './Home/style.css';
@@ -19,38 +19,38 @@ const Settings = () => {
         localStorage.clear();
     }
 
-    // useEffect(() => {
-    //     fetch('https://api.realworld.io/api/user', {
-    //         method: 'GET',
-    //         headers: {
-    //             'Authorization': `Bearer ${token}`
-    //         }
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         setUser(data.user); 
-    //         setImage(data.user.image);
-    //         setUsername(data.user.username);
-    //         setBio(data.user.bio );
-    //         setEmail(data.user.email);
-    //     })
-    //     .catch(error => console.error('Error fetching user:', error));
-    // }, [token]);
-
     useEffect(() => {
-        fetch("https://api.realworld.io/api/user", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        fetch('https://api.realworld.io/api/user', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         })
-          .then((response) => response.json())
-          .then((data) => {
-            setUser(data.user);
-            console.log(data.user);
-          })
-          .catch((error) => console.error("Error fetching user:", error));
-      }, []);
+        .then(response => response.json())
+        .then(data => {
+            setUser(data.user); 
+            setImage(data.user.image);
+            setUsername(data.user.username);
+            setBio(data.user.bio );
+            setEmail(data.user.email);
+        })
+        .catch(error => console.error('Error fetching user:', error));
+    }, [token]);
+
+    // useEffect(() => {
+    //     fetch("https://api.realworld.io/api/user", {
+    //       method: "GET",
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     })
+    //       .then((response) => response.json())
+    //       .then((data) => {
+    //         setUser(data.user);
+    //         console.log(data.user);
+    //       })
+    //       .catch((error) => console.error("Error fetching user:", error));
+    //   }, []);
 
 
     const handleUpdateSettings = (event) => {
@@ -84,7 +84,8 @@ const Settings = () => {
         .then(response => response.json())
         .then(data => {
             setUser(data.user); // Update the user state with the updated data
-            // Redirect to the profile page
+            console.log(data);
+            localStorage.setItem('userToken', data.user.token)
             window.location.href = '/profile';
         })
         .catch(error => console.error('Error updating user settings:', error));

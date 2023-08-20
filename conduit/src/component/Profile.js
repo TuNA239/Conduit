@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from './Home/Header';
 import Footer from './Home/Footer';
 import './Home/style.css';
+import { useParams } from 'react-router-dom';
 
 const Profile = () => {
+    const [token, setToken] = useState(localStorage.getItem('userToken'))
+    console.log(token);
+
     return (
         <>
             <Header/> 
