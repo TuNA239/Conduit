@@ -66,6 +66,18 @@ const HomePage = () => {
         nav(`/article/${slug}`)
     }
 
+    const handleFilter = (e) => {
+        const offset = (activePage - 1) * limit;
+        const tag = e
+        fetch(`https://api.realworld.io/api/articles?limit=${limit}&offset=${offset}&tag=${tag}`)
+            .then(response => response.json())
+            .then(data => {
+                setArticles(data.articles);
+                setArticlesCount(data.articlesCount);
+            })
+            .catch(error => console.error('Error fetching articles:', error));
+    }
+
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
@@ -207,16 +219,16 @@ const HomePage = () => {
                         <p>Popular Tags</p>
 
                         <div className='popular-tags'>
-                            <a className='popular-tags-item' href=''>welcome</a>
-                            <a className='popular-tags-item' href=''>implementations</a>
-                            <a className='popular-tags-item' href=''>introduction</a>
-                            <a className='popular-tags-item' href=''>codebaseShow</a>
-                            <a className='popular-tags-item' href=''>ipsum</a>
-                            <a className='popular-tags-item' href=''>qui</a>
-                            <a className='popular-tags-item' href=''>et</a>
-                            <a className='popular-tags-item' href=''>cupiditate</a>
-                            <a className='popular-tags-item' href=''>quia</a>
-                            <a className='popular-tags-item' href=''>deserunt</a>
+                            <a className='popular-tags-item' onClick={(e) => handleFilter("welcome")} >welcome</a>
+                            <a className='popular-tags-item' onClick={(e) => handleFilter("implementations")} >implementations</a>
+                            <a className='popular-tags-item' onClick={(e) => handleFilter("introduction")} >introduction</a>
+                            <a className='popular-tags-item' onClick={(e) => handleFilter("codebaseShow")} >codebaseShow</a>
+                            <a className='popular-tags-item' onClick={(e) => handleFilter("ipsum")} >ipsum</a>
+                            <a className='popular-tags-item' onClick={(e) => handleFilter("qui")} >qui</a>
+                            <a className='popular-tags-item' onClick={(e) => handleFilter("et")} >et</a>
+                            <a className='popular-tags-item' onClick={(e) => handleFilter("cupiditate")} >cupiditate</a>
+                            <a className='popular-tags-item' onClick={(e) => handleFilter("quia")} >quia</a>
+                            <a className='popular-tags-item' onClick={(e) => handleFilter("deserunt")} >deserunt</a>
                         </div>
                     </div>
                 </div>

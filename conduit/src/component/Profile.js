@@ -85,7 +85,7 @@ const Profile = () => {
                             <img className='user-img' src='https://api.realworld.io/images/smiley-cyrus.jpeg' />
                             <h4 className='user-name'>abca123456</h4>
 
-                            <a className='btn btn-sm btn-outline-secondary btn-edit-profile d-flex align-items-center mt-9'>
+                            <a href='/setting' className='btn btn-sm btn-outline-secondary btn-edit-profile d-flex align-items-center mt-6'>
                                 <i className='fa fa-gear'></i>
                                 &nbsp;&nbsp;Edit Profile Settings
                             </a>

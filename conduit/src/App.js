@@ -7,6 +7,7 @@ import HomePage from './component/Home/HomePage';
 import Editor from './component/Editor';
 import ArticleDetail from './component/ArticleDetail';
 import Profile from './component/Profile';
+import Setting from './component/Settings';
 import EditArticle from './component/EditArticle';
 
 export const UserContext = createContext();
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path:"/article/:slug",
     element: <ArticleDetail/>
+  }, 
+  {
+    path:"/setting",
+    element: <Setting/>
   },
   {
     path: "/edit/:slug",

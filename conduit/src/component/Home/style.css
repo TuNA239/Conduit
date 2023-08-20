@@ -226,6 +226,39 @@ nav{
     cursor: pointer;
 }
 
+.heading-setting{
+    font-weight: 400;
+}
+
+.form-control-lg{
+    padding: 0.75rem 1.5rem;
+    font-size: 1.25rem;
+    border-radius: 0.3rem;
+}
+
+.btn-update-setting{
+    float: right;
+    outline: none !important;
+    background-color: #5CB85C !important;
+    padding: 0.75rem 1.5rem !important;
+    font-size: 1.25rem !important;
+    border-radius:0.3rem !important; 
+    border-color: #5CB85C !important;
+}
+
+.btn-update-setting:hover{
+    background-color: #347e34 !important;
+}
+
+.setting-hr{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.setting-page{
+    margin-bottom: 8rem;
+}
+
 footer{
     position: fixed;
     bottom: 0;
