@@ -4,11 +4,29 @@ import Footer from './Home/Footer';
 import './Home/style.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Profile = () => {
     const [articlesFavorites, setarticlesFavorites] = useState([]);
     const [token, setToken] = useState(localStorage.getItem('userToken'));
+    const [user, setUser] = useState()
     const [n1Articles, setn1Articles] = useState([])
+
+    useEffect(() => {
+        fetch('https://api.realworld.io/api/user', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                setUser(data.user);
+                console.log(user);
+            })
+            .catch(error => console.error('Error fetching user:', error));
+    }, [token]);
+
     const getallArticles = async () => {
         const headers = {
             'Authorization': `Bearer ${localStorage.getItem('userToken')}`
@@ -26,7 +44,7 @@ const Profile = () => {
 
     }
     const nav = useNavigate()
-    
+
     const handleDetail = (slug) => {
         nav(`/article/${slug}`)
     }
@@ -35,10 +53,10 @@ const Profile = () => {
             'Authorization': `Bearer ${localStorage.getItem('userToken')}`
         }
         try {
-            const anArticles = await axios.get(`https://api.realworld.io/api/articles/${slug}`,{ headers })
+            const anArticles = await axios.get(`https://api.realworld.io/api/articles/${slug}`, { headers })
 
-             setn1Articles(anArticles.data.article)
-              
+            setn1Articles(anArticles.data.article)
+
         } catch (error) {
             console.log(error);
         }
@@ -68,12 +86,19 @@ const Profile = () => {
         handlegetFavorite();
 
     }
-    
+
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
         return formattedDate;
     };
+
+    if(!user){
+        return(
+            <div>Loading...</div>
+        )
+    }
+
     return (
         <>
             <Header />
@@ -82,8 +107,8 @@ const Profile = () => {
                 <div className='container'>
                     <div className='row'>
                         <div className='col-xs-12 col-md-10 offset-md-1'>
-                            <img className='user-img' src='https://api.realworld.io/images/smiley-cyrus.jpeg' />
-                            <h4 className='user-name'>abca123456</h4>
+                            <img className='user-img' src={user.image} />
+                            <h4 className='user-name text-center'>{user.username}</h4>
 
                             <a href='/setting' className='btn btn-sm btn-outline-secondary btn-edit-profile d-flex align-items-center mt-6'>
                                 <i className='fa fa-gear'></i>
@@ -109,9 +134,9 @@ const Profile = () => {
                         </li>
 
                     </ul>
-                </div> 
-                
-                   {articlesFavorites.map((articles, index) => (
+                </div>
+
+                {articlesFavorites.map((articles, index) => (
                     <div key={articles.slug} className='article-preview'>
                         <div className='d-flex justify-between align-items-center'>
                             <div className='article-meta d-flex align-items-center gap-3'>
