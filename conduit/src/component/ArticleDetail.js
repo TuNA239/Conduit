@@ -6,6 +6,7 @@ const ArticleDetail = () => {
   const { slug } = useParams()
   const [token, setToken] = useState(localStorage.getItem('userToken'))
   const [article, setArticle] = useState()
+  const [user, setUser] = useState();
   // console.log(slug);
 
   useEffect(() => {
@@ -15,7 +16,27 @@ const ArticleDetail = () => {
       .catch(error => console.error('Error fetching articles:', error));
   }, [])
 
-  // console.log(article.article.tagList);
+  useEffect(() => {
+    fetch('https://api.realworld.io/api/user', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        setUser(data.user)
+        console.log(data.user);
+      })
+      .catch(error => console.error('Error fetching user:', error));
+  }, []);
+
+  console.log(article);
+
+
+  const handleDelete = () =>{
+    console.log(article.article.slug);
+  }
 
   if (!article) {
     return (
@@ -86,8 +107,21 @@ const ArticleDetail = () => {
 
             </div>
           </div>
-
         </div>
+
+        {user != undefined && user.username === article.article.author.username &&
+          <div className="d-flex justify-center mt-10">
+            <a
+              to={`/editor/${article.slug}`}
+              className="btn btn-outline-secondary btn-sm">
+              <i className="ion-edit"></i> Edit Article
+            </a>
+            <button className="btn btn-outline-danger btn-sm" onClick={handleDelete}>
+              <i className="ion-trash-a"></i> Delete Article
+            </button>
+          </div>
+        }
+
         <div className="row">
           <div className="col-xs-12 col-md-8 offset-md-2">
             <div>

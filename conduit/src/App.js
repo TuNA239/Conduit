@@ -6,6 +6,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import HomePage from './component/Home/HomePage';
 import Editor from './component/Editor';
 import ArticleDetail from './component/ArticleDetail';
+import Profile from './component/Profile';
 
 export const UserContext = createContext();
 
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />
+  },
+  {
+    path: "/profile",
+    element: <Profile/>
   },
   {
     path: "/editor",
