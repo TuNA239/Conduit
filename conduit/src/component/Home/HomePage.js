@@ -5,6 +5,7 @@ import './style.css';
 import Pagination from 'react-bootstrap/Pagination';
 import YourFeed from './YourFeed';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 // let active = 1;
@@ -24,6 +25,8 @@ const HomePage = () => {
     const [activePage, setActivePage] = useState(1);
     const [articlesCount, setArticlesCount] = useState(0);
     const [token, setToken] = useState(localStorage.getItem('userToken'));
+    const [n1Articles, setn1Articles] = useState([])
+
     const nav = useNavigate()
 
     const limit = 10;
@@ -53,7 +56,7 @@ const HomePage = () => {
                 })
                 .catch(error => console.error('Error fetching articles:', error));
         }
-    }, [activePage]);
+    }, [activePage, n1Articles] );
 
     const handlePageChange = (pageNumber) => {
         setActivePage(pageNumber);
@@ -69,19 +72,22 @@ const HomePage = () => {
         return formattedDate;
     };
 
-    const increaseFavorites = (articleIndex) => {
-        const updatedArticles = [...articles];
-        updatedArticles[articleIndex].favoritesCount += 1;
-        updatedArticles[articleIndex].isFavorited = true; // Update isFavorited
-        setArticles(updatedArticles);
-    };
+  
 
-    const decreaseFavorites = (articleIndex) => {
-        const updatedArticles = [...articles];
-        updatedArticles[articleIndex].favoritesCount -= 1;
-        updatedArticles[articleIndex].isFavorited = false; // Update isFavorited
-        setArticles(updatedArticles);
-    };
+    const getAnArticles = async (slug) => {
+        const headers = {
+            'Authorization': `Bearer ${localStorage.getItem('userToken')}`
+        }
+        try {
+            const anArticles = await axios.get(`https://api.realworld.io/api/articles/${slug}`,{ headers })
+
+             setn1Articles(anArticles.data.article)
+              
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     const totalPages = Math.ceil(articlesCount / limit);
 
@@ -98,6 +104,30 @@ const HomePage = () => {
                 {number}
             </Pagination.Item>
         );
+    }
+    const handleFavorite = (slug) => {
+        getAnArticles(slug);
+        try {
+            const headers = {
+                'Authorization': `Bearer ${token}`
+            }
+
+            if (n1Articles.favorited) {
+                const respons = axios.delete(`https://api.realworld.io/api//articles/${slug}/favorite`, {
+                    headers
+                })
+            }
+            else {
+                const respons = axios.post(`https://api.realworld.io/api//articles/${slug}/favorite`, {}, {
+                    headers
+                })
+
+            }
+        } catch (error) {
+            console.log(" handle favorites");
+
+        }
+
     }
 
 
@@ -141,14 +171,10 @@ const HomePage = () => {
                                     </div>
                                 </div>
 
-                                <button className={`btn btn-sm btn-outline-success btn-heart ${articles.isFavorited ? 'bg-success text-white' : ''}`} style={{ borderColor: '#5CB85C' }}
-                                    onClick={() => {
-                                        if (articles.isFavorited) {
-                                            decreaseFavorites(index);
-                                        } else {
-                                            increaseFavorites(index);
-                                        }
-                                    }}
+                                <button
+                                    onClick={() => handleFavorite(articles.slug)}
+                                    className={`btn btn-sm btn-outline-success btn-heart ${articles.isFavorited ? 'bg-success text-white' : ''}`} style={{ borderColor: '#5CB85C' }}
+
                                 >
                                     <i className={`fa fa-heart ${articles.isFavorited ? 'text-white' : ''}`}></i>
                                     <span className='ml-1' style={{ fontWeight: '400' }}>{articles.favoritesCount}</span>
