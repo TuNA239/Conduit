@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "./Home/Header";
-import axios from 'axios';
+import axios from "axios";
 
 const ArticleDetail = () => {
   const { slug } = useParams();
@@ -35,30 +35,28 @@ const ArticleDetail = () => {
 
   console.log(article);
 
-  const handleEdit = () =>{
-    nav(`/edit/${slug}`)
-  }
+  const handleEdit = () => {
+    nav(`/edit/${slug}`);
+  };
 
-  const handleDelete = async e => {
+  const handleDelete = async (e) => {
     e.preventDefault();
-    axios.delete(
-      `https://api.realworld.io/api/articles/${slug}`,
-      {
+    axios
+      .delete(`https://api.realworld.io/api/articles/${slug}`, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-        }
-      }
-    )
+        },
+      })
       .then((res) => {
         console.log(res);
-        nav('/')
+        nav("/");
         // console.log(res.data.errors);
       })
       .catch((error) => {
-        console.error('Error publishing article:', error);
+        console.error("Error publishing article:", error);
       });
-  }
+  };
 
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
@@ -80,14 +78,8 @@ const ArticleDetail = () => {
         <div className="">
           <div className="fluid">
             <div className=" d-block text-center text-bg-dark text-white">
-              <div className="">
-                <h1
-                  className="pt-4 pb-3  text-start"
-                  style={{ marginLeft: "70px" }}
-                >
-                  {" "}
-                  {article.article.title}
-                </h1>
+              <div className="container article-meta d-flex align-items-center gap-3 pb-4">
+                <h1 className="pt-4 pb-2  text-start">{article.article.title}</h1>
               </div>
 
               <div className="container article-meta d-flex align-items-center gap-3 pb-4">
@@ -150,18 +142,23 @@ const ArticleDetail = () => {
             </div>
           </div>
         </div>
-
-        {user != undefined && user.username === article.article.author.username &&
-          <div className="d-flex justify-center mt-10">
-            <button className="btn btn-outline-secondary btn-sm" onClick={handleEdit}>
-              <i className="ion-edit"></i> Edit Article
-            </button>
-            <button className="btn btn-outline-danger btn-sm" onClick={handleDelete}>
-              <i className="ion-trash-a"></i> Delete Article
-            </button>
-          </div>
-        }
-
+        {user != undefined &&
+          user.username === article.article.author.username && (
+            <div className="d-flex justify-center mt-10">
+              <button
+                className="btn btn-outline-secondary btn-sm"
+                onClick={handleEdit}
+              >
+                <i className="ion-edit"></i> Edit Article
+              </button>
+              <button
+                className="btn btn-outline-danger btn-sm"
+                onClick={handleDelete}
+              >
+                <i className="ion-trash-a"></i> Delete Article
+              </button>
+            </div>
+          )}
         <div className="row">
           <div className="col-xs-12 col-md-8 offset-md-2">
             <div>
@@ -198,6 +195,51 @@ const ArticleDetail = () => {
             </div>
           </div>{" "}
         </div>{" "}
+        <div className="comment">
+        <div className="col-xs-12 col-md-8 offset-md-2">
+            <div>
+              <form
+                method="POST"
+                action="?/postComment"
+                className="card comment-form m-5"
+              >
+                <div className="card-block ">
+                  <textarea
+                    className="form-control "
+                    name="comment"
+                    rows="3"
+                  ></textarea>
+                </div>
+
+                <div className="card-footer d-flex justify-content-between align-items-center p-3">
+                 <div>
+                 <img
+                    style={{
+                      width: "2rem",
+                      float: "float-start",
+                      borderRadius: "50%",
+                    }}
+                    src="https://api.realworld.io/images/smiley-cyrus.jpeg"
+                    className="comment-author-img d-inline-block"
+                    alt="HastyAlvin"
+                  ></img>
+                  <a className="no-underline hover:underline hover:cursor-pointer p-1 "style={{ color: "Gray" }}>
+                    {/* {articles.author.username} */}
+                    {article.article.author.username}
+                  </a>
+                  <span className="feed-date d-d-inline-block ">
+                    {formatDate(article.article.createdAt)}
+                  </span>
+                 </div>
+                 
+                  <button className="btn btn-sm ion-trash " type="submit">
+                  <i className="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>{" "}
+        </div>
       </div>
     </>
   );
