@@ -3,63 +3,39 @@ import Header from './Header';
 import Footer from './Footer';
 import './style.css';
 import Pagination from 'react-bootstrap/Pagination';
-import { UserContext } from '../../App';
-import { useNavigate } from 'react-router-dom';
+import YourFeed from './YourFeed';
 
 
-let active = 1;
-let items = [];
-for (let number = 1; number <= 20; number++) {
-    items.push(
-        <Pagination.Item key={number} active={number === active} className='pagination-item'>
-            {number}
-        </Pagination.Item>,
-    );
-}
+// let active = 1;
+// let items = [];
+// for (let number = 1; number <= 20; number++) {
+//   items.push(
+//     <Pagination.Item key={number} active={number === active} className='pagination-item'>
+//       {number}
+//     </Pagination.Item>,
+//   );
+// }
+
+
 
 const HomePage = () => {
     const [articles, setArticles] = useState([]);
     const [activePage, setActivePage] = useState(1);
-    const [token, setToken] = useState(localStorage.getItem('userToken'));
-    const [user, setUser] = useState();
-    const nav = useNavigate()
+    const [articlesCount, setArticlesCount] = useState(0);
 
-    // useEffect(() => {
-    //     fetch('https://api.realworld.io/api/user', {
-    //         method: 'GET',
-    //         headers: {
-    //             'Authorization': `Bearer ${token}`
-    //         }
-    //     })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             setUser(data.user)
-    //             console.log(data.user);
-    //         })
-    //         .catch(error => console.error('Error fetching user:', error));
-    // }, []);
-
+    const limit = 10;
 
     useEffect(() => {
-        if (token) {
-            fetch('https://api.realworld.io/api/articles', {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                }
+        const offset = (activePage - 1) * limit;
+
+        fetch(`https://api.realworld.io/api/articles?limit=${limit}&offset=${offset}`)
+            .then(response => response.json())
+            .then(data => {
+                setArticles(data.articles);
+                setArticlesCount(data.articlesCount);
             })
-                // .then(console.log(token))
-                .then(response => response.json())
-                .then(data => setArticles(data.articles))
-                .catch(error => console.error('Error fetching articles:', error));
-        }
-        else {
-            fetch('https://api.realworld.io/api/articles')
-                .then(response => response.json())
-                .then(data => setArticles(data.articles))
-                .catch(error => console.error('Error fetching articles:', error));
-        }
-    }, []);
+            .catch(error => console.error('Error fetching articles:', error));
+    }, [activePage]);
 
     const handlePageChange = (pageNumber) => {
         setActivePage(pageNumber);
@@ -75,6 +51,38 @@ const HomePage = () => {
         return formattedDate;
     };
 
+    const increaseFavorites = (articleIndex) => {
+        const updatedArticles = [...articles];
+        updatedArticles[articleIndex].favoritesCount += 1;
+        updatedArticles[articleIndex].isFavorited = true; // Update isFavorited
+        setArticles(updatedArticles);
+    };
+
+    const decreaseFavorites = (articleIndex) => {
+        const updatedArticles = [...articles];
+        updatedArticles[articleIndex].favoritesCount -= 1;
+        updatedArticles[articleIndex].isFavorited = false; // Update isFavorited
+        setArticles(updatedArticles);
+    };
+
+    const totalPages = Math.ceil(articlesCount / limit);
+
+    // Dynamically generate pagination items based on totalPages
+    const paginationItems = [];
+    for (let number = 1; number <= totalPages; number++) {
+        paginationItems.push(
+            <Pagination.Item
+                key={number}
+                active={number === activePage}
+                className='pagination-item'
+                onClick={() => handlePageChange(number)}
+            >
+                {number}
+            </Pagination.Item>
+        );
+    }
+
+
     return (
         <div>
             <Header />
@@ -88,8 +96,11 @@ const HomePage = () => {
 
             <div className='pr-32 pl-32 pt-10 row'>
                 <div className='col-md-9'>
-                    <div className='feed-toggle'>
+                    <div className='feed-toggle' style={{borderBottom:'1px solid lightgray'}}>
                         <ul className='nav nav-pills feed-item'>
+                            <li className='nav-item'>
+                                <a className='nav-link feed-tag'>Your Feed</a>
+                            </li>
                             <li className='nav-item'>
                                 <a className='nav-link feed-tag'>Global Feed</a>
                             </li>
@@ -98,8 +109,8 @@ const HomePage = () => {
                             </li> */}
                         </ul>
                     </div>
-
-                    {articles.map(articles => (
+                
+                    {articles.map((articles, index) => (
                         <div key={articles.slug} className='article-preview'>
                             <div className='d-flex justify-between align-items-center'>
                                 <div className='article-meta d-flex align-items-center gap-3'>
@@ -112,9 +123,17 @@ const HomePage = () => {
                                     </div>
                                 </div>
 
-                                <button className='btn btn-sm btn-outline-success btn-heart' style={{ borderColor: '#5CB85C' }}>
-                                    <i className='fa fa-heart'></i>
-                                    <span className='ml-1' style={{ fontWeight: '400' }}>{articles.favoritesCount}</span>
+                                <button className={`btn btn-sm btn-outline-success btn-heart ${articles.isFavorited ? 'bg-success text-white' : ''}`} style={{borderColor:'#5CB85C'}}
+                                    onClick={() => {
+                                        if (articles.isFavorited) {
+                                            decreaseFavorites(index);
+                                        } else {
+                                            increaseFavorites(index);
+                                        }
+                                    }}
+                                >
+                                    <i className={`fa fa-heart ${articles.isFavorited ? 'text-white' : ''}`}></i>
+                                    <span className='ml-1' style={{fontWeight:'400'}}>{articles.favoritesCount}</span>
                                 </button>
                             </div>
 
@@ -135,6 +154,8 @@ const HomePage = () => {
                         </div>
                     ))}
 
+                    {/* <YourFeed/> */}
+                    
                 </div>
 
                 <div className='col-md-3'>
@@ -157,7 +178,16 @@ const HomePage = () => {
                 </div>
             </div>
 
-            <Pagination className='mr-32 ml-32 pagination'>{items}</Pagination>
+            {/* <Pagination className='mr-32 ml-32 pagination'>{items}</Pagination> */}
+            {/* <Pagination className='mr-32 ml-32 pagination'>{paginationItems}</Pagination> */}
+            <Pagination
+                className='mr-32 ml-32 pagination'
+                currentPage={activePage}
+                totalPages={totalPages}
+                handlePageChange={handlePageChange}
+            >
+                {paginationItems}
+            </Pagination>
 
             <Footer />
         </div>
