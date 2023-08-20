@@ -65,7 +65,7 @@ const Header = () => {
                         </a>
                     </li>
                     <li className='nav-item'>
-                        <a href='/' className='nav-link d-flex align-items-center linkHeader' style={{ color: 'lightGray' }}>
+                        <a href='/profile' className='nav-link d-flex align-items-center linkHeader' style={{ color: 'lightGray' }}>
                             <i className='fa fa-face-laugh-squint fs-4'></i>
                             {/* <img src= {user.image} className='h-10 w-10'/> */}
                             &nbsp; {user.username}

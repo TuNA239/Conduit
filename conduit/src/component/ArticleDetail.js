@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "./Home/Header";
+import axios from 'axios';
 
 const ArticleDetail = () => {
   const { slug } = useParams()
   const [token, setToken] = useState(localStorage.getItem('userToken'))
   const [article, setArticle] = useState()
   const [user, setUser] = useState();
+  const nav = useNavigate();
   // console.log(slug);
 
   useEffect(() => {
@@ -33,9 +35,29 @@ const ArticleDetail = () => {
 
   console.log(article);
 
+  const handleEdit = () =>{
+    nav(`/edit/${slug}`)
+  }
 
-  const handleDelete = () =>{
-    console.log(article.article.slug);
+  const handleDelete = async e => {
+    e.preventDefault();
+    axios.delete(
+      `https://api.realworld.io/api/articles/${slug}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        }
+      }
+    )
+      .then((res) => {
+        console.log(res);
+        nav('/')
+        // console.log(res.data.errors);
+      })
+      .catch((error) => {
+        console.error('Error publishing article:', error);
+      });
   }
 
   if (!article) {
@@ -111,11 +133,9 @@ const ArticleDetail = () => {
 
         {user != undefined && user.username === article.article.author.username &&
           <div className="d-flex justify-center mt-10">
-            <a
-              to={`/editor/${article.slug}`}
-              className="btn btn-outline-secondary btn-sm">
+            <button className="btn btn-outline-secondary btn-sm" onClick={handleEdit}>
               <i className="ion-edit"></i> Edit Article
-            </a>
+            </button>
             <button className="btn btn-outline-danger btn-sm" onClick={handleDelete}>
               <i className="ion-trash-a"></i> Delete Article
             </button>
