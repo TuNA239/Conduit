@@ -5,7 +5,9 @@ import { useContext } from 'react';
 import { useEffect } from 'react';
 const Header = () => {
     const [token, setToken] = useState(localStorage.getItem('userToken'))
-    const [user, setUser] = useState();
+    const [user, setUser] = useState({});
+
+
 
     useEffect(() => {
         fetch('https://api.realworld.io/api/user', {
@@ -17,11 +19,15 @@ const Header = () => {
             .then(response => response.json())
             .then(data => {
                 setUser(data.user)
-                console.log(data.user);
+                // console.log(data.user);
             })
             .catch(error => console.error('Error fetching user:', error));
     }, []);
 
+    if (!user) {
+        setTimeout(() => {
+        }, 1000)
+    }
 
     return (
         <nav className='navbar navbar-light'>

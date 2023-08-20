@@ -4,6 +4,7 @@ import Footer from './Footer';
 import './style.css';
 import Pagination from 'react-bootstrap/Pagination';
 import { UserContext } from '../../App';
+import { useNavigate } from 'react-router-dom';
 
 
 let active = 1;
@@ -21,6 +22,7 @@ const HomePage = () => {
     const [activePage, setActivePage] = useState(1);
     const [token, setToken] = useState(localStorage.getItem('userToken'));
     const [user, setUser] = useState();
+    const nav = useNavigate()
 
     // useEffect(() => {
     //     fetch('https://api.realworld.io/api/user', {
@@ -61,6 +63,10 @@ const HomePage = () => {
 
     const handlePageChange = (pageNumber) => {
         setActivePage(pageNumber);
+    }
+
+    const handleDetail = (slug) =>{
+        nav(`/article/${slug}`)
     }
 
     const formatDate = (dateString) => {
@@ -112,7 +118,7 @@ const HomePage = () => {
                                 </button>
                             </div>
 
-                            <div className='d-block'>
+                            <div className='d-block' onClick={()=>handleDetail(articles.slug)}>
                                 <h1 className='article-title'>{articles.title}</h1>
                                 <p className='article-description'>{articles.description}</p>
                                 <div className='d-flex align-items-center justify-between'>
