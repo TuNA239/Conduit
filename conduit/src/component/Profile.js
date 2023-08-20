@@ -15,7 +15,7 @@ const Profile = () => {
                             <img className='user-img' src='https://api.realworld.io/images/smiley-cyrus.jpeg' />
                             <h4 className='user-name'>abca123456</h4>
 
-                            <a className='btn btn-sm btn-outline-secondary btn-edit-profile d-flex align-items-center mt-9'>
+                            <a href='/setting' className='btn btn-sm btn-outline-secondary btn-edit-profile d-flex align-items-center mt-6'>
                                 <i className='fa fa-gear'></i>
                                 &nbsp;&nbsp;Edit Profile Settings
                             </a>
@@ -104,9 +104,7 @@ const Profile = () => {
                                     </div>
                                 </div>
 
-                                <button className='btn btn-sm btn-outline-success btn-heart bg-success text-white' style={{borderColor:'#5CB85C'}}
-                                    
-                                >
+                                <button className='btn btn-sm btn-outline-success btn-heart bg-success text-white' style={{borderColor:'#5CB85C'}}>
                                     <i className='fa fa-heart text-white'></i>
                                     <span className='ml-1' style={{fontWeight:'400'}}>1644</span>
                                 </button>

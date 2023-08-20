@@ -58,27 +58,33 @@ const Register = () => {
         <MDBCard className='m-5' style={{ maxWidth: '600px' }}>
           <MDBCardBody style={{ width: '30rem', height: 'auto' }}>
             <h2 className='text-uppercase text-center mb-5'>Sign Up</h2>
+            
             {!errorMessage && (
               <div className='alert alert-danger' role='alert'>
                 {errorMessage}
               </div>
             )}
+            <div className='text-center pb-5'>
+                <a href='/login' className='need' style={{ color: '#5CB85C' }}>
+                  Have an account?
+                </a>
+              </div>
             <form onSubmit={handleRegister}> {/* Wrap the form fields with a form element */}
               <MDBInput
                 wrapperClass='mb-4'
-                label='Your Name'
+                label=''
                 size='lg'
                 id='form1'
-                type='text'
+                type='text' placeholder='Your Name'
                 required
                 value={username}
                 onChange={(e) => setName(e.target.value)}
               />
               <MDBInput
                 wrapperClass='mb-4'
-                label='Your Email'
+                label=''
                 size='lg'
-                id='form2'
+                id='form2' placeholder='Email'
                 type='email'
                 required
                 value={email}
@@ -86,21 +92,17 @@ const Register = () => {
               />
               <MDBInput
                 wrapperClass='mb-4'
-                label='Password'
+                label=''
                 size='lg'
                 id='form3'
-                type='password'
+                type='password' placeholder='Password'
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <div className='text-center'>
-                <a href='/login' className='need' style={{ color: '#5CB85C' }}>
-                  Have an account?
-                </a>
-              </div>
+              
               <MDBBtn
-                className='mb-4 w-100'
+                className='mb-4 float-end'
                 size='lg'
                 style={{
                   color: 'white',
@@ -109,7 +111,7 @@ const Register = () => {
                 }}
                 type='submit'
               >
-                Register
+                Sign up
               </MDBBtn>
             </form>
           </MDBCardBody>

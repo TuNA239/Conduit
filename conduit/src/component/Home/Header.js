@@ -8,7 +8,6 @@ const Header = () => {
     const [user, setUser] = useState({});
 
 
-
     useEffect(() => {
         fetch('https://api.realworld.io/api/user', {
             method: 'GET',
