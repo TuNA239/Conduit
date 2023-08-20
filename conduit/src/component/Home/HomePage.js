@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import './style.css';
@@ -19,7 +19,6 @@ import YourFeed from './YourFeed';
 
 
 const HomePage = () => {
-
     const [articles, setArticles] = useState([]);
     const [activePage, setActivePage] = useState(1);
     const [articlesCount, setArticlesCount] = useState(0);
@@ -40,6 +39,10 @@ const HomePage = () => {
 
     const handlePageChange = (pageNumber) => {
         setActivePage(pageNumber);
+    }
+
+    const handleDetail = (slug) =>{
+        nav(`/article/${slug}`)
     }
 
     const formatDate = (dateString) => {
@@ -82,8 +85,8 @@ const HomePage = () => {
 
     return (
         <div>
-            <Header/>
-            
+            <Header />
+
             <div className='banner'>
                 <div className='container text-center'>
                     <h1>conduit</h1>
@@ -112,7 +115,7 @@ const HomePage = () => {
                             <div className='d-flex justify-between align-items-center'>
                                 <div className='article-meta d-flex align-items-center gap-3'>
                                     <a className='d-inline-block'>
-                                        <img src={articles.author.image} alt='error'/>
+                                        <img src={articles.author.image} alt='error' />
                                     </a>
                                     <div className='info'>
                                         <a className='no-underline hover:underline hover:cursor-pointer'>{articles.author.username}</a>
@@ -134,7 +137,7 @@ const HomePage = () => {
                                 </button>
                             </div>
 
-                            <div className='d-block'>
+                            <div className='d-block' onClick={()=>handleDetail(articles.slug)}>
                                 <h1 className='article-title'>{articles.title}</h1>
                                 <p className='article-description'>{articles.description}</p>
                                 <div className='d-flex align-items-center justify-between'>
@@ -145,7 +148,7 @@ const HomePage = () => {
                                             <li key={tag} className='tag-item hover:cursor-pointer'>{tag}</li>
                                         ))}
                                     </ul>
-                                </div>         
+                                </div>
                             </div>
 
                         </div>
@@ -186,7 +189,7 @@ const HomePage = () => {
                 {paginationItems}
             </Pagination>
 
-            <Footer/>
+            <Footer />
         </div>
     );
 }
