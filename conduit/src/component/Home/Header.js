@@ -31,13 +31,13 @@ const Header = () => {
 
     return (
         <nav className='navbar navbar-light'>
-            <div className='container' style={{ width: '70%' }}>
+            <div className='container' style={{ width: '100%' }}>
                 <a href="/" className='navbar-brand fw-bolder fs-4' style={{ color: 'rgb(73, 204, 73)' }}>conduit</a>
 
                 {/* Show before user login */}
                 {!token && <ul className='nav flex'>
                     <li className='nav-item'>
-                        <a href='/' className='nav-link' style={{ color: 'gray' }}>Home</a>
+                        <a href='/' className='nav-link' style={{ color: 'lightGray' }}>Home</a>
                     </li>
                     <li className='nav-item'>
                         <a href='/login' className='nav-link linkHeader' style={{ color: 'lightGray' }}>Sign in</a>
