@@ -3,6 +3,7 @@ import Header from './Home/Header';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Page404 from './404Page/404Page';
 
 const Editor = () => {
   // Khởi tạo các trạng thái sử dụng useState
@@ -24,15 +25,21 @@ const Editor = () => {
         'Authorization': `Bearer ${token}`
       }
     })
-      .then(response => response.json())
-      .then(data => {
-        setUser(data.user)
-        console.log(data.user);
+    .then(response => response.json())
+    .then(data => {
+      setUser(data.user)
+      console.log(data.user);
       })
       .catch(error => console.error('Error fetching user:', error));
-  }, []);
-
-
+    }, []);
+    
+    if(!token){
+      return(
+        <Page404/>
+      )
+    }
+    
+    
   // Hàm xử lý sự kiện thay đổi tiêu đề
   const changeTitle = event => {
     setTitle(event.target.value);
