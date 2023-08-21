@@ -9,6 +9,7 @@ import ArticleDetail from './component/ArticleDetail';
 import Profile from './component/Profile';
 import Setting from './component/Settings';
 import EditArticle from './component/EditArticle';
+import Page404 from './component/404Page/404Page';
 
 export const UserContext = createContext();
 
@@ -44,7 +45,7 @@ const router = createBrowserRouter([
   {
     path: "/edit/:slug",
     element: <EditArticle/>
-  }
+  },
 ]);
 
 function App() {

@@ -51,10 +51,10 @@ const Register = () => {
       <Header />
       <MDBContainer
         fluid
-        className='d-flex align-items-center justify-content-center bg-image'
+        className='d-flex align-items-center justify-content-center bg-image '
       >
         <div className='mask gradient-custom-3'></div>
-        <MDBCard className='m-5' style={{ maxWidth: '600px' }}>
+        <MDBCard className='m-5 p-5' style={{ maxWidth: '600px' }}>
           <MDBCardBody style={{ width: '30rem', height: 'auto' }}>
             <h2 className='text-uppercase text-center mb-5'>Sign Up</h2>
             
@@ -100,8 +100,8 @@ const Register = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
               
-              <MDBBtn
-                className='mb-4 float-end'
+              <button
+                className='btn mb-4 float-end p-3 fs-4 '
                 size='lg'
                 style={{
                   color: 'white',
@@ -111,7 +111,7 @@ const Register = () => {
                 type='submit'
               >
                 Sign up
-              </MDBBtn>
+              </button>
             </form>
           </MDBCardBody>
         </MDBCard>
