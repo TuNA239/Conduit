@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Header from './Home/Header';
+import axios from "axios";
 
 const LoginPage = () => {
     const nav = useNavigate()
@@ -34,7 +35,8 @@ const LoginPage = () => {
             const user = await res.json();
             console.log(user);
             console.log(user.user.token);
-            localStorage.setItem('userToken', user.user.token)
+            localStorage.setItem('userToken', user.user.token);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${user.user.token}`;
             nav('/')
         } catch (error) {
             if (error.errors) {

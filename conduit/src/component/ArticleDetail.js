@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "./Home/Header";
 import axios from "axios";
+import './Home/style.css';
+import YourFeed from "./Home/YourFeed";
 
 const ArticleDetail = () => {
   const { slug } = useParams();
@@ -9,15 +11,27 @@ const ArticleDetail = () => {
   const [article, setArticle] = useState();
   const [comment, setComment] = useState([]);
   const [user, setUser] = useState();
-  const [body, setBody] = useState('')
+  const [body, setBody] = useState('');
+  const [followedAuthor, setFollowedAuthor] = useState(null); 
   const nav = useNavigate();
   // console.log(slug);
 
   useEffect(() => {
-    fetch(`https://api.realworld.io/api/articles/${slug}`)
-      .then((response) => response.json())
-      .then((data) => setArticle(data))
+      const setDefaultToken = async () =>{
+        axios.defaults.headers.common['Authorization'] =  await `Bearer ${localStorage.getItem("userToken")}`;
+      }
+      setDefaultToken();
+  }, [localStorage.getItem("userToken")]);
+
+  const handleGetArticle = () => {
+    axios.get(`https://api.realworld.io/api/articles/${slug}`)
+      // .then((response) => response.json())
+      .then((data) => setArticle(data.data))
       .catch((error) => console.error("Error fetching articles:", error));
+  }
+
+  useEffect(() => {
+    handleGetArticle();
   }, []);
 
   useEffect(() => {
@@ -43,7 +57,7 @@ const ArticleDetail = () => {
         })
         .catch((error) => console.error("Error fetching comments:", error));
     }
-  });
+  }, []);
 
   useEffect(() => {
     fetch("https://api.realworld.io/api/user", {
@@ -155,6 +169,27 @@ const ArticleDetail = () => {
     return <div>Loading...</div>;
   }
 
+  const handleFollow = async () => {
+    console.log(article);
+    console.log(token);
+    axios.defaults.headers.common['Authorization'] = await `Bearer ${token}`;
+      if (article?.article?.author?.following) {
+        axios.delete(`https://api.realworld.io/api/profiles/${article.article.author.username}/follow`) 
+        .then((res) => {
+          handleGetArticle();
+        }
+        );
+    }
+    else{
+      axios.post(`https://api.realworld.io/api/profiles/${article.article.author.username}/follow`)
+      .then((res) => {
+        handleGetArticle();
+      })
+    }
+  
+  };
+
+
   return (
     <>
       <Header />
@@ -163,7 +198,7 @@ const ArticleDetail = () => {
           <div className="fluid">
             <div className=" d-block text-center text-bg-dark text-white">
               <div className="container article-meta d-flex align-items-center gap-3 pb-4">
-                <h1 className="pt-4 pb-2  text-start">{article.article.title}</h1>
+                <h1 className="pt-4 pb-2  text-start">{article?.article?.title}</h1>
               </div>
 
               <div className="container article-meta d-flex align-items-center gap-3 pb-4">
@@ -181,14 +216,31 @@ const ArticleDetail = () => {
                     className="no-underline hover:underline hover:cursor-pointer"
                     style={{ color: "white" }}
                   >
-                    {/* {articles.author.username} */}
-                    {article.article.author.username}
+                    {article?.article?.author?.username}
+                    
                   </a>
 
                   <span className="feed-date d-block">
-                    {formatDate(article.article.createdAt)}
+                    {formatDate(article?.article?.createdAt)}
                   </span>
                 </div>
+
+                <div className="d-flex align-items-center gap-2">
+                  <button
+                    className={`btn btn-sm btn-outline-secondary btn-follow ${
+                       !article?.article?.author?.following ? 'unfollowed' : ''
+                    }`}
+                    onClick={handleFollow}
+                  >
+                    <i className="fa fa-plus"></i>
+                    &nbsp;  {!article?.article?.author?.following ? 'Unfollow' : 'Follow'} {article?.article?.author?.username}
+                  </button>
+                   <button className="btn btn-sm btn-outline-secondary btn-favorite-detail">
+                      <i className="fa fa-heart btn-outline-success"></i>
+                      &nbsp; Favorite Article ( {article?.article?.favoritesCount} )
+                   </button>
+                </div>
+
               </div>
             </div>
           </div>
@@ -196,26 +248,26 @@ const ArticleDetail = () => {
             <div className="row article-content">
               <div className="col-xs-12">
                 <div>
-                  <p style={{ textAlign: "initial", fontSize: "1.25em" }}>{article.article.body}</p>
+                  <p style={{ textAlign: "initial", fontSize: "1.25em" }}>{article?.article?.body}</p>
                 </div>
               </div>
 
               <div className="text-start">
                 <ul className="tag-list d-inline-block">
-                  {article.article.tagList.map((tag, index) => (
-                    <li
-                      key={index}
-                      style={{
-                        border: "1px solid #ddd",
-                        color: "rgb(193, 190, 190)",
-                        fontSize: "0.8rem",
-                        borderRadius: "10rem",
-                      }}
-                      className="tag-default tag-pill tag-outline d-inline-block pt-1 pb-1 pl-2 pr-2 m-1"
-                    >
-                      {tag}
-                    </li>
-                  ))}
+                {article?.article?.tagList && article?.article?.tagList?.map((tag, index) => (
+                  <li
+                    key={index}
+                    style={{
+                      border: "1px solid #ddd",
+                      color: "rgb(193, 190, 190)",
+                      fontSize: "0.8rem",
+                      borderRadius: "10rem",
+                    }}
+                    className="tag-default tag-pill tag-outline d-inline-block pt-1 pb-1 pl-2 pr-2 m-1"
+                  >
+                    {tag}
+                  </li>
+                ))}
                 </ul>
               </div>
 
@@ -227,7 +279,7 @@ const ArticleDetail = () => {
           </div>
         </div>
         {user !== undefined &&
-          user.username === article.article.author.username && (
+          user?.username === article?.article?.author?.username && (
             <div className="d-flex justify-center mt-10">
               <button
                 className="btn btn-outline-secondary btn-sm"
@@ -288,13 +340,13 @@ const ArticleDetail = () => {
 
         <div className="comment">
           {comment.map((e, index) => (
-            <div className="col-xs-12 col-md-8 offset-md-2" key={e.id}>
+            <div className="col-xs-12 col-md-8 offset-md-2" key={e?.id}>
               <div>
                 <div
                   className="card comment-form m-5"
                 >
                   <div className="card-block form-control h-16">
-                    {e.body}
+                    {e?.body}
                   </div>
                   <div className="card-footer d-flex justify-content-between align-items-center p-3">
                     <div>
@@ -304,21 +356,21 @@ const ArticleDetail = () => {
                           float: "float-start",
                           borderRadius: "50%",
                         }}
-                        src={e.author.image}
+                        src={e?.author?.image}
                         className="comment-author-img d-inline-block"
                         alt="HastyAlvin"
                       ></img>
                       <a className="no-underline hover:underline hover:cursor-pointer p-1 " style={{ color: "Gray" }}>
                         {/* {articles.author.username} */}
-                        {e.author.username}
+                        {e?.author?.username}
                       </a>
                       <span className="feed-date d-d-inline-block ">
-                        {formatDate(e.createdAt)}
+                        {formatDate(e?.createdAt)}
                       </span>
                     </div>
                     {user !== undefined &&
-                      user.username === e.author.username &&
-                      < button className="btn btn-sm ion-trash " onClick={() => handleDeleteComment(e.id)}>
+                      user?.username === e?.author?.username &&
+                      < button className="btn btn-sm ion-trash " onClick={() => handleDeleteComment(e?.id)}>
                         <i className="fa-solid fa-trash-can"></i>
                       </button>
                     }
@@ -329,6 +381,8 @@ const ArticleDetail = () => {
           ))}
         </div >
       </div >
+
+      {/* {followedAuthor && <YourFeed followedAuthor={followedAuthor} />} */}
     </>
   );
 };
