@@ -22,7 +22,6 @@ const Register = () => {
 
   const handleRegister = (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
-
     const data = {
       user: {
         username,
