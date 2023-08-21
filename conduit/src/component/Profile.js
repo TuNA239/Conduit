@@ -33,7 +33,7 @@ const Profile = () => {
         }
         try {
             const allArticles = await axios.get(`https://api.realworld.io/api/articles`, { headers })
-            const arFall = allArticles.data.articles.filter(article => article.isFavorited);
+            const arFall = allArticles.data.articles.filter(article => article.Favorited);
             setarticlesFavorites(arFall)
         } catch (error) {
             console.log(error);
