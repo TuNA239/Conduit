@@ -5,12 +5,14 @@ import './Home/style.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import Page404 from './404Page/404Page';
 
 const Profile = () => {
     const [articlesFavorites, setarticlesFavorites] = useState([]);
     const [token, setToken] = useState(localStorage.getItem('userToken'));
     const [user, setUser] = useState()
     const [n1Articles, setn1Articles] = useState([])
+    const nav = useNavigate()
 
     useEffect(() => {
         fetch('https://api.realworld.io/api/user', {
@@ -26,6 +28,12 @@ const Profile = () => {
             })
             .catch(error => console.error('Error fetching user:', error));
     }, [token]);
+
+    if(!token){
+        return(
+            <Page404/>
+        )
+    }
 
     const getallArticles = async () => {
         const headers = {
@@ -43,7 +51,7 @@ const Profile = () => {
         getallArticles();
 
     }
-    const nav = useNavigate()
+    
 
     const handleDetail = (slug) => {
         nav(`/article/${slug}`)

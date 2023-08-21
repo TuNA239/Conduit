@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Header from "./Home/Header";
 import axios from "axios";
 import { useEffect } from "react";
+import Page404 from "./404Page/404Page";
 
 const EditArticle = () => {
     const [title, setTitle] = useState('');
@@ -16,18 +17,25 @@ const EditArticle = () => {
     const { slug } = useParams();
     const nav = useNavigate();
 
+    
     useEffect(() => {
         fetch(`https://api.realworld.io/api/articles/${slug}`)
-            .then(response => response.json())
-            .then(data => {
-                setArticle(data);
-                setTitle(data.article.title);
-                setDescription(data.article.description);
-                setBody(data.article.body);
-                setTagList([...data.article.tagList])
-            })
-            .catch(error => console.error('Error fetching articles:', error));
+        .then(response => response.json())
+        .then(data => {
+            setArticle(data);
+            setTitle(data.article.title);
+            setDescription(data.article.description);
+            setBody(data.article.body);
+            setTagList([...data.article.tagList])
+        })
+        .catch(error => console.error('Error fetching articles:', error));
     }, [])
+    
+    if(!token){
+        return(
+            <Page404/>
+        )
+    }
 
     if (!article) {
         return (
