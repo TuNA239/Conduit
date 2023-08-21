@@ -117,31 +117,37 @@ const HomePage = () => {
             </Pagination.Item>
         );
     }
+
+
     const handleFavorite = (slug) => {
         getAnArticles(slug);
-        try {
-            const headers = {
-                'Authorization': `Bearer ${token}`
+        if(!token){
+            nav('/login');
+        }
+        else{
+            try {
+                const headers = {
+                    'Authorization': `Bearer ${token}`
+                }
+    
+                if (n1Articles.favorited) {
+                    const respons = axios.delete(`https://api.realworld.io/api//articles/${slug}/favorite`, {
+                        headers
+                    })
+                }
+                else {
+                    const respons = axios.post(`https://api.realworld.io/api//articles/${slug}/favorite`, {}, {
+                        headers
+                    })
+    
+                }
+            } catch (error) {
+                console.log(" handle favorites");
+    
             }
-
-            if (n1Articles.favorited) {
-                const respons = axios.delete(`https://api.realworld.io/api//articles/${slug}/favorite`, {
-                    headers
-                })
-            }
-            else {
-                const respons = axios.post(`https://api.realworld.io/api//articles/${slug}/favorite`, {}, {
-                    headers
-                })
-
-            }
-        } catch (error) {
-            console.log(" handle favorites");
-
         }
 
     }
-
 
     return (
         <div>
@@ -185,10 +191,10 @@ const HomePage = () => {
 
                                 <button
                                     onClick={() => handleFavorite(articles.slug)}
-                                    className={`btn btn-sm btn-outline-success btn-heart ${articles.isFavorited ? 'bg-success text-white' : ''}`} style={{ borderColor: '#5CB85C' }}
-
+                                    className={`btn btn-sm btn-outline-success btn-heart ${articles.favorited ? 'bg-success text-white' : ''}`}
+                                    style={{ borderColor: '#5CB85C' }}
                                 >
-                                    <i className={`fa fa-heart ${articles.isFavorited ? 'text-white' : ''}`}></i>
+                                    <i className={`fa fa-heart ${articles.favorited ? 'text-white' : ''}`}></i>
                                     <span className='ml-1' style={{ fontWeight: '400' }}>{articles.favoritesCount}</span>
                                 </button>
                             </div>

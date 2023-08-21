@@ -41,21 +41,22 @@ const Profile = () => {
         }
         try {
             const allArticles = await axios.get(`https://api.realworld.io/api/articles`, { headers })
-            const arFall = allArticles.data.articles.filter(article => article.favorited);
+            const arFall = allArticles.data.articles.filter(article => article.Favorited);
             setarticlesFavorites(arFall)
         } catch (error) {
             console.log(error);
         }
+    
     }
     const handlegetFavorite = () => {
         getallArticles();
 
     }
-    
 
     const handleDetail = (slug) => {
         nav(`/article/${slug}`)
     }
+
     const getAnArticles = async (slug) => {
         const headers = {
             'Authorization': `Bearer ${localStorage.getItem('userToken')}`
