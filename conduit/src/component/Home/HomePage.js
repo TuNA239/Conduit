@@ -121,25 +121,30 @@ const HomePage = () => {
 
     const handleFavorite = (slug) => {
         getAnArticles(slug);
-        try {
-            const headers = {
-                'Authorization': `Bearer ${token}`
+        if(!token){
+            nav('/login');
+        }
+        else{
+            try {
+                const headers = {
+                    'Authorization': `Bearer ${token}`
+                }
+    
+                if (n1Articles.favorited) {
+                    const respons = axios.delete(`https://api.realworld.io/api//articles/${slug}/favorite`, {
+                        headers
+                    })
+                }
+                else {
+                    const respons = axios.post(`https://api.realworld.io/api//articles/${slug}/favorite`, {}, {
+                        headers
+                    })
+    
+                }
+            } catch (error) {
+                console.log(" handle favorites");
+    
             }
-
-            if (n1Articles.favorited) {
-                const respons = axios.delete(`https://api.realworld.io/api//articles/${slug}/favorite`, {
-                    headers
-                })
-            }
-            else {
-                const respons = axios.post(`https://api.realworld.io/api//articles/${slug}/favorite`, {}, {
-                    headers
-                })
-
-            }
-        } catch (error) {
-            console.log(" handle favorites");
-
         }
 
     }
