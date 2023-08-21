@@ -7,8 +7,9 @@ const ArticleDetail = () => {
   const { slug } = useParams();
   const [token, setToken] = useState(localStorage.getItem("userToken"));
   const [article, setArticle] = useState();
-  const [comment, setComment] = useState();
+  const [comment, setComment] = useState([]);
   const [user, setUser] = useState();
+  const [body, setBody] = useState('')
   const nav = useNavigate();
   // console.log(slug);
 
@@ -20,11 +21,29 @@ const ArticleDetail = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`https://api.realworld.io/api/articles/${slug}/comments`)
-      .then((response) => response.json())
-      .then((data) => setComment(data.comments))
-      .catch((error) => console.error("Error fetching articles:", error));
-  }, []);
+    if (token) {
+      fetch(`https://api.realworld.io/api/articles/${slug}/comments`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setComment(data.comments);
+          console.log(data.comments);
+        })
+        .catch((error) => console.error("Error fetching comments:", error));
+    } else {
+      fetch(`https://api.realworld.io/api/articles/${slug}/comments`)
+        .then((response) => response.json())
+        .then((data) => {
+          setComment(data.comments);
+          console.log(data.comments);
+        })
+        .catch((error) => console.error("Error fetching comments:", error));
+    }
+  });
 
   useEffect(() => {
     fetch("https://api.realworld.io/api/user", {
@@ -40,9 +59,6 @@ const ArticleDetail = () => {
       })
       .catch((error) => console.error("Error fetching user:", error));
   }, []);
-
-  console.log(article);
-  console.log(comment);
 
   const handleEdit = () => {
     nav(`/edit/${slug}`);
@@ -67,6 +83,65 @@ const ArticleDetail = () => {
       });
   };
 
+  const changeBody = event => {
+    setBody(event.target.value);
+    console.log(body);
+  };
+
+  const postComment = async e => {
+    e.preventDefault();
+    axios.post(
+      `https://api.realworld.io/api/articles/${slug}/comments`,
+      {
+        comment: {
+          body: body,
+        },
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          comment: {
+            body: body,
+          }
+        })
+      }
+    )
+      .then((res) => {
+        console.log(res);
+        // nav(`/article/${slug}`)
+        // console.log(res.data.errors);
+      })
+      .then(() => {
+        setBody('')
+      })
+      .catch((error) => {
+        console.error('Error publishing article:', error);
+      });
+  };
+
+  const handleDeleteComment = (id) => {
+    console.log(id);
+    axios
+      .delete(`https://api.realworld.io/api/articles/${slug}/comments/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        // nav("/");
+        // console.log(res.data.errors);
+      })
+      .catch((error) => {
+        console.error("Error publishing article:", error);
+      });
+
+  }
+
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     const formattedDate = new Date(dateString).toLocaleDateString(
@@ -76,7 +151,7 @@ const ArticleDetail = () => {
     return formattedDate;
   };
 
-  if (!article) {
+  if (!article || !article) {
     return <div>Loading...</div>;
   }
 
@@ -151,7 +226,7 @@ const ArticleDetail = () => {
             </div>
           </div>
         </div>
-        {user != undefined &&
+        {user !== undefined &&
           user.username === article.article.author.username && (
             <div className="d-flex justify-center mt-10">
               <button
@@ -168,21 +243,26 @@ const ArticleDetail = () => {
               </button>
             </div>
           )}
-        <div className="row">
+
+        {token && <div className="row">
           <div className="col-xs-12 col-md-8 offset-md-2">
             <div>
               <form
                 method="POST"
-                action="?/createComment"
+                onSubmit={postComment}
                 className="card comment-form m-5"
               >
                 <div className="card-block ">
-                  <textarea
-                    className="form-control p-4"
-                    name="comment"
-                    placeholder="Write a comment..."
-                    rows="3"
-                  ></textarea>
+                  <fieldset className="form-group p-2">
+                    <input
+                      type="text"
+                      className="form-control h-32"
+                      placeholder="Write a comment..."
+                      value={body}
+                      onChange={changeBody}
+                      id="body"
+                    />
+                  </fieldset>
                 </div>
 
                 <div className="card-footer d-flex justify-content-between align-items-center p-3">
@@ -202,20 +282,18 @@ const ArticleDetail = () => {
                 </div>
               </form>
             </div>
-          </div>{" "}
-        </div>{" "}
+          </div>
+        </div>}
 
 
         <div className="comment">
           {comment.map((e, index) => (
-            <div className="col-xs-12 col-md-8 offset-md-2">
+            <div className="col-xs-12 col-md-8 offset-md-2" key={e.id}>
               <div>
-                <form
-                  method="POST"
-                  action="?/postComment"
+                <div
                   className="card comment-form m-5"
                 >
-                  <div className="card-block form-control">
+                  <div className="card-block form-control h-16">
                     {e.body}
                   </div>
                   <div className="card-footer d-flex justify-content-between align-items-center p-3">
@@ -238,14 +316,14 @@ const ArticleDetail = () => {
                         {formatDate(e.createdAt)}
                       </span>
                     </div>
-                    {user != undefined &&
+                    {user !== undefined &&
                       user.username === e.author.username &&
-                      < button className="btn btn-sm ion-trash " type="submit">
+                      < button className="btn btn-sm ion-trash " onClick={() => handleDeleteComment(e.id)}>
                         <i className="fa-solid fa-trash-can"></i>
                       </button>
                     }
                   </div>
-                </form>
+                </div>
               </div>
             </div>
           ))}
