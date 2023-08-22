@@ -25,7 +25,18 @@ const HomePage = () => {
     const [activePage, setActivePage] = useState(1);
     const [articlesCount, setArticlesCount] = useState(0);
     const [token, setToken] = useState(localStorage.getItem('userToken'));
-    const [n1Articles, setn1Articles] = useState([])
+    const [n1Articles, setn1Articles] = useState([]);
+    const [followedAuthor, setFollowedAuthor] = useState(null); 
+    const [activeTab, setActiveTab] = useState('global');
+    const [tag, setTag] = useState();
+
+    useEffect(() => {
+        const setDefaultToken = async () =>{
+          axios.defaults.headers.common['Authorization'] =  await `Bearer ${localStorage.getItem("userToken")}`;
+        }
+        setDefaultToken();
+    }, [localStorage.getItem("userToken")]);
+
 
     const nav = useNavigate()
 
@@ -35,28 +46,28 @@ const HomePage = () => {
         const offset = (activePage - 1) * limit;
 
         if (token) {
-            fetch(`https://api.realworld.io/api/articles?limit=${limit}&offset=${offset}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                }
+            axios.get(`https://api.realworld.io/api/articles${activeTab === 'yourFeed'? '/feed' : ''}?limit=${limit}&offset=${offset}${tag?`&tag=${tag}`:''}`, {
+                // headers: {
+                //     'Content-Type': 'application/json',
+                //     Authorization: `Bearer ${token}`,
+                // }
             })
-                .then(response => response.json())
+                // .then(response => response.json())
                 .then(data => {
-                    setArticles(data.articles);
-                    setArticlesCount(data.articlesCount);
+                    setArticles(data.data.articles);
+                    setArticlesCount(data.data.articlesCount);
                 })
                 .catch(error => console.error('Error fetching articles:', error));
         } else {
-            fetch(`https://api.realworld.io/api/articles?limit=${limit}&offset=${offset}`)
-                .then(response => response.json())
+            axios.get(`https://api.realworld.io/api/articles?limit=${limit}&offset=${offset}${tag?`&tag=${tag}`:''}`)
+                // .then(response => response.json())
                 .then(data => {
-                    setArticles(data.articles);
-                    setArticlesCount(data.articlesCount);
+                    setArticles(data.data.articles);
+                    setArticlesCount(data.data.articlesCount);
                 })
                 .catch(error => console.error('Error fetching articles:', error));
         }
-    }, [activePage, n1Articles] );
+    }, [activePage, n1Articles, activeTab, tag] );
 
     const handlePageChange = (pageNumber) => {
         setActivePage(pageNumber);
@@ -67,15 +78,16 @@ const HomePage = () => {
     }
 
     const handleFilter = (e) => {
-        const offset = (activePage - 1) * limit;
-        const tag = e
-        fetch(`https://api.realworld.io/api/articles?limit=${limit}&offset=${offset}&tag=${tag}`)
-            .then(response => response.json())
-            .then(data => {
-                setArticles(data.articles);
-                setArticlesCount(data.articlesCount);
-            })
-            .catch(error => console.error('Error fetching articles:', error));
+        // const offset = (activePage - 1) * limit;
+        // const tag = e
+        // axios.get(`https://api.realworld.io/api/articles?limit=${limit}&offset=${offset}&tag=${tag}`)
+        //     // .then(response => response.json())
+        //     .then(data => {
+        //         setArticles(data.data.articles);
+        //         setArticlesCount(data.data.articlesCount);
+        //     })
+        //     .catch(error => console.error('Error fetching articles:', error));
+        setTag(e);
     }
 
     const formatDate = (dateString) => {
@@ -149,6 +161,19 @@ const HomePage = () => {
 
     }
 
+
+    const handleYourFeed = () => {
+        setFollowedAuthor(/* Set the followed author */);
+        setActiveTab('yourFeed');
+      };
+      
+      const handleGlobalFeed = () => {
+        setFollowedAuthor(null); // Reset the followed author
+        setActiveTab('global');
+      };
+
+      
+
     return (
         <div>
             <Header />
@@ -165,14 +190,19 @@ const HomePage = () => {
                     <div className='feed-toggle' style={{ borderBottom: '1px solid lightgray' }}>
                         <ul className='nav nav-pills feed-item'>
                             {token && <li className='nav-item'>
-                                <a className='nav-link feed-tag'>Your Feed</a>
+                                <a className={`nav-link feed-tag ${activeTab === 'yourFeed' && !tag ? 'active' : ''}`}
+                                    onClick={handleYourFeed}>Your Feed</a>
                             </li>}
                             <li className='nav-item'>
-                                <a className='nav-link feed-tag'>Global Feed</a>
+                                <a className={`nav-link feed-tag ${activeTab === 'global' && !tag ? 'active' : ''}`}
+                                    onClick={handleGlobalFeed}>Global Feed</a>
                             </li>
-                            {/* <li className='nav-item'>
-                                <a className='nav-link feed-tag'># tag</a>
-                            </li> */}
+                            {tag && 
+                                <li className='nav-item'>
+                                    <a className={`nav-link feed-tag ${activeTab === 'global' ? 'active' : ''}`}># {tag}</a>
+                                </li>
+                            }
+                        
                         </ul>
                     </div>
 
@@ -204,7 +234,6 @@ const HomePage = () => {
                                 <p className='article-description'>{articles.description}</p>
                                 <div className='d-flex align-items-center justify-between'>
                                     <span className='article-read-more hover:cursor-pointer'>Read more ...</span>
-                                    {/* list tag */}
                                     <ul className='tag-list'>
                                         {articles.tagList.map(tag => (
                                             <li key={tag} className='tag-item hover:cursor-pointer'>{tag}</li>
@@ -216,7 +245,8 @@ const HomePage = () => {
                         </div>
                     ))}
 
-                    {/* <YourFeed/> */}
+                    {/* {activeTab === 'yourFeed' ? <YourFeed  followedAuthor={'https://api.realworld.io/api/articles/feed'}/> : <YourFeed  followedAuthor={'https://api.realworld.io/api/articles'}/>} */}
+                    
 
                 </div>
 
@@ -242,14 +272,14 @@ const HomePage = () => {
 
             {/* <Pagination className='mr-32 ml-32 pagination'>{items}</Pagination> */}
             {/* <Pagination className='mr-32 ml-32 pagination'>{paginationItems}</Pagination> */}
-            <Pagination
+            `<Pagination
                 className='mr-32 ml-32 pagination'
                 currentPage={activePage}
                 totalPages={totalPages}
                 handlePageChange={handlePageChange}
             >
                 {paginationItems}
-            </Pagination>
+            </Pagination>`
 
             <Footer />
         </div>
