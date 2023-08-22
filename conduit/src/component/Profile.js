@@ -151,7 +151,7 @@ const Profile = () => {
             </div>
 
 
-            <div className='pr-52 pl-52 pt-10 row'>
+            <div className='pr-52 pl-52 pt-10 row' style={{marginBottom:'8rem'}}>
                 <div className='feed-toggle' style={{ borderBottom: '1px solid lightgray' }}>
                     <ul className='nav nav-pills feed-item'>
                         <li className='nav-item'>
