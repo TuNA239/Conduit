@@ -29,9 +29,9 @@ const Profile = () => {
             .catch(error => console.error('Error fetching user:', error));
     }, [token]);
 
-    if(!token){
-        return(
-            <Page404/>
+    if (!token) {
+        return (
+            <Page404 />
         )
     }
 
@@ -40,14 +40,21 @@ const Profile = () => {
             'Authorization': `Bearer ${localStorage.getItem('userToken')}`
         }
         try {
-            const allArticles = await axios.get(`https://api.realworld.io/api/articles`, { headers })
-            const arFall = allArticles.data.articles.filter(article => article.Favorited);
+            const allArticles = await axios.get(`https://api.realworld.io/api/articles?favorited=${user.username}&limit=5&offset=0`, { headers })
+            // const arFall = allArticles.data.articles.filter(article => article.Favorited);
+            const arFall = allArticles.data.articles.filter(article => article.favorited);
             setarticlesFavorites(arFall)
         } catch (error) {
             console.log(error);
         }
-    
+
     }
+
+
+    console.log(articlesFavorites);
+
+
+
     const handlegetFavorite = () => {
         getallArticles();
 
@@ -102,8 +109,8 @@ const Profile = () => {
         return formattedDate;
     };
 
-    if(!user){
-        return(
+    if (!user) {
+        return (
             <div>Loading...</div>
         )
     }

@@ -47,10 +47,10 @@ const HomePage = () => {
 
         if (token) {
             axios.get(`https://api.realworld.io/api/articles${activeTab === 'yourFeed'? '/feed' : ''}?limit=${limit}&offset=${offset}${tag?`&tag=${tag}`:''}`, {
-                // headers: {
-                //     'Content-Type': 'application/json',
-                //     Authorization: `Bearer ${token}`,
-                // }
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                }
             })
                 // .then(response => response.json())
                 .then(data => {
