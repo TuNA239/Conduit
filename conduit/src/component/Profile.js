@@ -65,7 +65,7 @@ const Profile = () => {
             'Authorization': `Bearer ${localStorage.getItem('userToken')}`
         }
         try {
-            const allArticles = await axios.get(`https://api.realworld.io/api/articles?limit=5&offset=0`, { headers })
+            const allArticles = await axios.get(`https://api.realworld.io/api/articles?author=${user.username}&limit=5&offset=0`, { headers })
             // const arFall = allArticles.data.articles.filter(article => article.Favorited);
             // const arFall = allArticles.data.articles.filter(article => article.favorited);
             console.log(allArticles);
