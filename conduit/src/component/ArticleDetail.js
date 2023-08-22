@@ -30,9 +30,16 @@ const ArticleDetail = () => {
       .catch((error) => console.error("Error fetching articles:", error));
   }
 
+  // useEffect(() => {
+  //   fetch(`https://api.realworld.io/api/articles/${slug}`)
+  //     .then((response) => response.json())
+  //     .then((data) => setArticle(data))
+  //     .catch((error) => console.error("Error fetching articles:", error));
+  // });
+
   useEffect(() => {
     handleGetArticle();
-  }, []);
+  },[]);
 
   useEffect(() => {
     if (token) {
@@ -57,7 +64,7 @@ const ArticleDetail = () => {
         })
         .catch((error) => console.error("Error fetching comments:", error));
     }
-  }, []);
+  });
 
   useEffect(() => {
     fetch("https://api.realworld.io/api/user", {
@@ -72,7 +79,7 @@ const ArticleDetail = () => {
         console.log(data.user);
       })
       .catch((error) => console.error("Error fetching user:", error));
-  }, []);
+  },[]);
 
   const handleEdit = () => {
     nav(`/edit/${slug}`);
@@ -165,7 +172,8 @@ const ArticleDetail = () => {
     return formattedDate;
   };
 
-  if (!article || !article) {
+
+  if (!article) {
     return <div>Loading...</div>;
   }
 
