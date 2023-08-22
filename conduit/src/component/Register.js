@@ -17,7 +17,7 @@ const Register = () => {
   const [username, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
   localStorage.clear();
 
   const handleRegister = (e) => {
@@ -40,8 +40,17 @@ const Register = () => {
       .catch((error) => {
         setErrorMessage(false);
         const errors = error.response.data.errors;
-        const key = Object.keys(errors)[0];
-        setErrorMessage(`${key} ${errors[key][0]}`);
+        if (errors && errors.username) {
+          setErrorMessage('Username already exists')
+        }else if (errors && errors.email) {
+          setErrorMessage('Email already exists')
+        } 
+        
+        else {
+          const key = Object.keys(errors)[0];
+          setErrorMessage(`${key} ${errors[key][0]}`);
+        }
+
         console.log(errors);
       });
   };
@@ -57,17 +66,14 @@ const Register = () => {
         <MDBCard className='m-5 p-5' style={{ maxWidth: '600px' }}>
           <MDBCardBody style={{ width: '30rem', height: 'auto' }}>
             <h2 className='text-uppercase text-center mb-5'>Sign Up</h2>
+
             
-            {!errorMessage && (
-              <div className='alert alert-danger' role='alert'>
+            {errorMessage && (
+              <div className="alert alert-danger" role="alert">
                 {errorMessage}
               </div>
             )}
-            <div className='text-center pb-5'>
-                <a href='/login' className='need' style={{ color: '#5CB85C' }}>
-                  Have an account?
-                </a>
-              </div>
+            
             <form onSubmit={handleRegister}> {/* Wrap the form fields with a form element */}
               <MDBInput
                 wrapperClass='mb-4'
@@ -99,7 +105,7 @@ const Register = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              
+
               <button
                 className='btn mb-4 float-end p-3 fs-4 '
                 size='lg'
