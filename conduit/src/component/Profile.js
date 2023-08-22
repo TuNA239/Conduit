@@ -60,6 +60,21 @@ const Profile = () => {
 
     }
 
+    const handleMyArticle = async () =>{
+        const headers = {
+            'Authorization': `Bearer ${localStorage.getItem('userToken')}`
+        }
+        try {
+            const allArticles = await axios.get(`https://api.realworld.io/api/articles?limit=5&offset=0`, { headers })
+            // const arFall = allArticles.data.articles.filter(article => article.Favorited);
+            // const arFall = allArticles.data.articles.filter(article => article.favorited);
+            console.log(allArticles);
+            setarticlesFavorites(allArticles.data.articles)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const handleDetail = (slug) => {
         nav(`/article/${slug}`)
     }
@@ -140,7 +155,7 @@ const Profile = () => {
                 <div className='feed-toggle' style={{ borderBottom: '1px solid lightgray' }}>
                     <ul className='nav nav-pills feed-item'>
                         <li className='nav-item'>
-                            <a className='nav-link feed-tag'>My Articles</a>
+                            <a className='nav-link feed-tag' onClick={() => handleMyArticle()}>My Articles</a>
                         </li>
                         <li className='nav-item'>
                             <a
